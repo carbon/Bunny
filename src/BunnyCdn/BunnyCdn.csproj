@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>BunnyCdn</AssemblyName>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.7.0</Version>
+    <LangVersion>8.0</LangVersion>
+    <NullableContextOptions>enable</NullableContextOptions>
+
+    <Authors>iamcarbon</Authors>
+    <Description>A .NETStandard API for BunnyCDN.</Description>
+    <PackageId>BunnyCdn</PackageId>
+    <PackageTags>bunnycdn async netstandard</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Carbon.Json" Version="1.9.0" />
+  </ItemGroup>
+</Project>
