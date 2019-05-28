@@ -12,6 +12,7 @@
     <PackageId>BunnyCdn</PackageId>
     <PackageTags>bunnycdn async netstandard</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/carbon/BunnyCdn</PackageProjectUrl>
   </PropertyGroup>
   
   <ItemGroup>
