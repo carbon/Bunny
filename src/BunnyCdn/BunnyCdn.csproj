@@ -3,9 +3,9 @@
   <PropertyGroup>
     <AssemblyName>BunnyCdn</AssemblyName>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.7.0</Version>
-    <LangVersion>8.0</LangVersion>
-    <NullableContextOptions>enable</NullableContextOptions>
+    <Version>0.9.0</Version>
+    <LangVersion>8</LangVersion>
+    <Nullable>enable</Nullable>
 
     <Authors>iamcarbon</Authors>
     <Description>A .NETStandard API for BunnyCDN.</Description>
@@ -16,6 +16,6 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Carbon.Json" Version="1.9.0" />
+    <PackageReference Include="Carbon.Json" Version="2.0.0" />
   </ItemGroup>
 </Project>
