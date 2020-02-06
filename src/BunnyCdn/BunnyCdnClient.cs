@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using System.Web;
 
 using BunnyCdn.Exceptions;
 using BunnyCdn.Serialization;
@@ -50,6 +50,8 @@ namespace BunnyCdn
             });
 
             this.http.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "gzip");
+
+            
         }
 
         public BunnyCdnClient(IBunnyCdnAccessKey accessKey, HttpClient httpClient)
@@ -110,7 +112,7 @@ namespace BunnyCdn
 
         public async Task LoadFreeCertificateAsync(LoadFreeCertificateRequest request)
         {
-            await GetAsync(GetUrl($"pullzone/loadFreeCertificate?hostname={UrlEncoder.Default.Encode(request.Hostname)}"));
+            await GetAsync(GetUrl($"pullzone/loadFreeCertificate?hostname={HttpUtility.UrlEncode(request.Hostname)}"));
         }
 
         public async Task AddCertificateAsync(AddCertificateRequest request)
@@ -140,7 +142,7 @@ namespace BunnyCdn
 
         public async Task DeleteHostnameAsync(DeleteHostnameRequest request)
         {
-            await DeleteAsync(GetUrl($"pullzone/deleteHostname?id={request.PullZoneId}&hostname={UrlEncoder.Default.Encode(request.Hostname)}"));
+            await DeleteAsync(GetUrl($"pullzone/deleteHostname?id={request.PullZoneId}&hostname={HttpUtility.UrlEncode(request.Hostname)}"));
         }
 
         #endregion
@@ -177,7 +179,7 @@ namespace BunnyCdn
 
         public async Task<BillingSummary> GetBillingSummaryAsync()
         {
-            return await GetAsync<BillingSummary>(GetUrl("billing"));
+            return await GetAsync< BillingSummary>(GetUrl("billing"));
         }
         #endregion
 
@@ -185,11 +187,9 @@ namespace BunnyCdn
 
         public async Task<bool> PurgeUrlAsync(Uri url)
         {
-            string requestUrl = GetUrl("purge/?url=" + UrlEncoder.Default.Encode(url.AbsoluteUri));
+            await PostAsync(GetUrl("purge?url=" + HttpUtility.UrlEncode(url.ToString())));
 
-            var (status, _) = await PostAsync(requestUrl);
-
-            return status == HttpStatusCode.OK;
+            return true;
         }
 
         public async Task<bool> PurgePullZoneAsync(long pullZoneId)
@@ -230,7 +230,7 @@ namespace BunnyCdn
 
         public async Task<IPAddress[]> GetEdgeIpsAsync()
         {
-            string url = "https://bunnycdn.com/api/system/edgeserverlist";
+            var url = "https://bunnycdn.com/api/system/edgeserverlist";
 
             string text = await http.GetStringAsync(url);
 
@@ -246,14 +246,14 @@ namespace BunnyCdn
             return servers;
         }
 
-        private string GetUrl(string path) => baseUrl + path;
+        private Uri GetUrl(string path) => new Uri(baseUrl + path);
 
-        private async Task<(HttpStatusCode, string)> GetAsync(string url)
+        private async Task<(HttpStatusCode, string)> GetAsync(Uri url)
         {
             return await SendAsync(new HttpRequestMessage(HttpMethod.Get, url));
         }
    
-        private async Task<(HttpStatusCode, string)> PostJsonAsync(string url, object data)   
+        private async Task<(HttpStatusCode, string)> PostJsonAsync(Uri url, object data)   
         {
             return await SendAsync(new HttpRequestMessage(HttpMethod.Post, url) {
                 Headers = {
@@ -263,12 +263,12 @@ namespace BunnyCdn
             });
         }
 
-        private async Task<(HttpStatusCode, string)> DeleteAsync(string url)
+        private async Task<(HttpStatusCode, string)> DeleteAsync(Uri url)
         {
             return await SendAsync(new HttpRequestMessage(HttpMethod.Delete, url));
         }
 
-        private async Task<(HttpStatusCode, string)> PostAsync(string url)
+        private async Task<(HttpStatusCode, string)> PostAsync(Uri url)
         {
             return await SendAsync(new HttpRequestMessage(HttpMethod.Post, url));
         }
@@ -288,7 +288,7 @@ namespace BunnyCdn
         {
             if (accessKey.ShouldRenew)
             {
-                await accessKey.RenewAsync().ConfigureAwait(false);
+                await accessKey.RenewAsync();
             }
 
             message.Headers.Add("AccessKey", accessKey.Value);
@@ -309,7 +309,7 @@ namespace BunnyCdn
             return response;
         }
 
-        private async Task<T> GetAsync<T>(string path)
+        private async Task<T> GetAsync<T>(Uri path)
             where T : new()
         {
             var (_, responseText) = await GetAsync(path);
@@ -317,7 +317,7 @@ namespace BunnyCdn
             return JsonObject.Parse(responseText).As<T>();
         }
 
-        private async Task<T[]> GetListAsync<T>(string path)
+        private async Task<T[]> GetListAsync<T>(Uri path)
             where T : new()
         {
             var (_, responseText) = await GetAsync(path);
