@@ -1,1 +1,1 @@
-dotnet pack ./src/BunnyCdn -c Release -o ./../../release/BunnyCdn
+dotnet pack ./src/BunnyCdn -c Release -o ./release/BunnyCdn
