@@ -1,6 +1,6 @@
 ﻿namespace BunnyCdn
 {
-    public enum EdgeRuleActionType : byte
+    public enum EdgeRuleActionType
     {
         BlockRequest = 4,
         ForceDownload = 7,

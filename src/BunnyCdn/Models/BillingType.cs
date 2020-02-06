@@ -1,6 +1,6 @@
 namespace BunnyCdn
 {
-    public enum BillingType : byte
+    public enum BillingType
     {
         Bitcoin = 1,
         CreditCard = 2,

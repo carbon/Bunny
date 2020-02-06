@@ -1,6 +1,6 @@
 ﻿namespace BunnyCdn
 {
-    public enum EdgeRuleTriggerType : byte
+    public enum EdgeRuleTriggerType
     {
         RequestUrl = 0,
         RequestHeader = 1,
