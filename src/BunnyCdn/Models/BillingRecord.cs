@@ -4,7 +4,7 @@ using System;
 
 namespace BunnyCdn
 {
-    public class BillingRecord
+    public sealed class BillingRecord
     {
         public long Id { get; set; }
 

@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 namespace BunnyCdn
 {
-    public class EdgeRule
+    public sealed class EdgeRule
     {
         [DataMember(Name = "Guid", EmitDefaultValue = false)]
         public string Guid { get; set; }

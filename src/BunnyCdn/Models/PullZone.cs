@@ -2,7 +2,7 @@
 
 namespace BunnyCdn
 {
-    public class PullZone
+    public sealed class PullZone
     {
         public long Id { get; set; }
 

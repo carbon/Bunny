@@ -4,7 +4,7 @@ using BunnyCdn.Models;
 
 namespace BunnyCdn
 {
-    public class GetStatisticsResult
+    public sealed class GetStatisticsResult
     {
         public double TotalBandwidthUsed { get; set; }
 

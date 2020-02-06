@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 namespace BunnyCdn
 {
-    public class Hostname
+    public sealed class Hostname
     {
         public long Id { get; set; }
 

@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace BunnyCdn
 {
-    public class EdgeRuleTrigger
+    public sealed class EdgeRuleTrigger
     {
         public EdgeRuleTrigger() { }
 

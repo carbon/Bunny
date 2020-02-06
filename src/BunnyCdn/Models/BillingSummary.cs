@@ -2,7 +2,7 @@
 
 namespace BunnyCdn
 {
-    public class BillingSummary
+    public sealed class BillingSummary
     {
         public decimal Balance { get; set; }
 
