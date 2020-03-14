@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-using BunnyCdn.Models;
+using System.Collections.Generic;
 
 namespace BunnyCdn
 {
@@ -12,26 +12,26 @@ namespace BunnyCdn
         
         public double CacheHitRate { get; set; }
 
-        public TimeSeriesDataset<long> BandwidthUsedChart { get; set; }
+        public Dictionary<string, long> BandwidthUsedChart { get; set; }
 
-        public TimeSeriesDataset<long> BandwidthCachedChart { get; set; }
+        public Dictionary<string, long> BandwidthCachedChart { get; set; }
    
-        public TimeSeriesDataset<double> CacheHitRateChart { get; set; }
+        public Dictionary<string, double> CacheHitRateChart { get; set; } 
 
-        public TimeSeriesDataset<long> RequestsServedChart { get; set; }
+        public Dictionary<string, long> RequestsServedChart { get; set; }
 
-        public TimeSeriesDataset<long> PullRequestsPulledChart { get; set; }
+        public Dictionary<string, long> PullRequestsPulledChart { get; set; }
 
-        public TimeSeriesDataset<double> UserBalanceHistoryChart { get; set; }
+        public Dictionary<string, double> UserBalanceHistoryChart { get; set; }
 
-        public TimeSeriesDataset<long> UserStorageUsedChart { get; set; }
+        public Dictionary<string, long> UserStorageUsedChart { get; set; }
 
-        public GeotrafficDistribution GeoTrafficDistribution { get; set; }
+        public Dictionary<string, long> GeoTrafficDistribution { get; set; }
 
-        public TimeSeriesDataset<long> Error3xxChart { get; set; }
+        public Dictionary<string, long> Error3xxChart { get; set; }
 
-        public TimeSeriesDataset<long> Error4xxChart { get; set; }
+        public Dictionary<string, long> Error4xxChart { get; set; }
 
-        public TimeSeriesDataset<long> Error5xxChart { get; set; }
+        public Dictionary<string, long> Error5xxChart { get; set; }
     }
 }

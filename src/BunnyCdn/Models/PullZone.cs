@@ -45,9 +45,9 @@ namespace BunnyCdn
 
         public long? MonthlyBandwidthLimit { get; set; }
 
-        public long MonthlyBandwidthUsed { get; set; } // in bytes
+        public long? MonthlyBandwidthUsed { get; set; } // in bytes
 
-        public decimal MonthlyCharges { get; set; }
+        public decimal? MonthlyCharges { get; set; }
 
         public bool? AddHostHeader { get; set; }
 
@@ -69,9 +69,9 @@ namespace BunnyCdn
 
         public int? CacheControlMaxAgeOverride { get; set; }
 
-        public long BurstSize { get; set; }
+        public long? BurstSize { get; set; }
 
-        public long RequestLimit { get; set; }
+        public long? RequestLimit { get; set; }
 
         public bool? BlockRootPathAccess { get; set; }
 
@@ -79,7 +79,7 @@ namespace BunnyCdn
 
         public double? LimitRateAfter { get; set; }
 
-        public long ConnectionLimitPerIPCount { get; set; }
+        public long? ConnectionLimitPerIPCount { get; set; }
 
         public bool? AddCanonicalHeader { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿namespace BunnyCdn
 {
+    // Keep number
     public enum MatchType
     {
         Any = 0,

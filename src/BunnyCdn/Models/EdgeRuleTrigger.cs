@@ -1,7 +1,6 @@
 ﻿#nullable disable
 
 using System;
-using System.Runtime.Serialization;
 
 namespace BunnyCdn
 {
@@ -16,8 +15,7 @@ namespace BunnyCdn
             PatternMatches = patternMatches;
         }
 
-        [DataMember(Name = "Guid", EmitDefaultValue = false)]
-        public Guid Guid { get; set; }
+        public Guid? Guid { get; set; }
 
         public string Parameter1 { get; set; }
 

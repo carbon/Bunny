@@ -1,7 +1,5 @@
 ﻿#nullable disable
 
-using System.Runtime.Serialization;
-
 namespace BunnyCdn
 {
     public sealed class Hostname
@@ -14,7 +12,6 @@ namespace BunnyCdn
 
         public bool IsSystemHostname { get; set; }
 
-        [DataMember(Name = "HasCertificate")]
         public bool HasCertificate { get; set; }
     }
 }
