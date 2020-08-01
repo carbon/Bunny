@@ -34,8 +34,6 @@ namespace BunnyCdn
             });
 
             this.http.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "gzip");
-
-            
         }
 
         public BunnyCdnClient(IBunnyCdnAccessKey accessKey, HttpClient httpClient)
@@ -99,9 +97,29 @@ namespace BunnyCdn
             await GetAsync(GetUrl($"pullzone/loadFreeCertificate?hostname={HttpUtility.UrlEncode(request.Hostname)}"));
         }
 
+        public async Task SetTlsSupport(SetTlsSupportRequest request)
+        {
+            await PostJsonAsync(GetUrl($"pullzone/setTlsSupport"), request);
+        }
+
         public async Task AddCertificateAsync(AddCertificateRequest request)
         {
             await PostJsonAsync(GetUrl($"pullzone/addCertificate"), request);
+        }
+
+        public async Task ResetSecurityKeyAsync(ResetSecurityKeyRequest request)
+        {
+            await PostAsync(GetUrl("pullzone/requestSecurityKey?pullZoneId=" + request.Id.ToString()));
+        }
+
+        public async Task SetZoneSecurityEnabledAsync(SetZoneSecurityEnabledRequest request)
+        {
+            await PostJsonAsync(GetUrl("pullzone/setZoneSecurityEnabled"), request);
+        }
+
+        public async Task SetZoneSecurityIncludeHashRemoteIpEnabled(SetZoneSecurityIncludeHashRemoteIPEnabledRequest request)
+        {
+            await PostJsonAsync(GetUrl("pullzone/setZoneSecurityIncludeHashRemoteIPEnabled"), request);
         }
 
         public async Task<DownloadLogResult> DownloadLogAsync(DownloadLogRequest request)
@@ -216,9 +234,13 @@ namespace BunnyCdn
         {
             const string url = "https://bunnycdn.com/api/system/edgeserverlist";
 
-            var text = await http.GetStreamAsync(url).ConfigureAwait(false);
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-            var json = await JsonSerializer.DeserializeAsync<string[]>(text).ConfigureAwait(false);
+            using var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
+
+            var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+            var json = await JsonSerializer.DeserializeAsync<string[]>(responseStream).ConfigureAwait(false);
 
             var servers = new IPAddress[json.Length];
 

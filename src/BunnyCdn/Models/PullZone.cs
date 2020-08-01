@@ -99,5 +99,9 @@ namespace BunnyCdn
         public bool? EnableHostnameVary { get; set; }
 
         public string CnameDomain { get; set; }
+
+        public bool? EnableTLS1 { get; set; }
+
+        public bool? EnableTLS1_1 { get; set; }
     }
 }
