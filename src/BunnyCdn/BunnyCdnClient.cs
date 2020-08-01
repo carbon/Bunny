@@ -18,7 +18,9 @@ namespace BunnyCdn
         private readonly IBunnyCdnAccessKey accessKey;
         private readonly HttpClient http;
 
-        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { IgnoreNullValues = true };
+        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions {
+            IgnoreNullValues = true 
+        };
 
         public BunnyCdnClient(string accessKey)
             : this(new BunnyCdnAccessKey(accessKey))
@@ -59,67 +61,67 @@ namespace BunnyCdn
         {
             var (_, responseText) = await PostJsonAsync(GetUrl("pullzone"), request).ConfigureAwait(false);
 
-            return JsonSerializer.Deserialize< PullZone>(responseText);
+            return JsonSerializer.Deserialize<PullZone>(responseText);
         }
 
         public async Task SetEnabledVaryParametersAsync(SetEnabledVaryParametersRequest request)
         {
-            await PostJsonAsync(GetUrl("pullzone/setEnabledVaryParameters"), request);
+            await PostJsonAsync(GetUrl("pullzone/setEnabledVaryParameters"), request).ConfigureAwait(false);
         }
 
         public async Task SetCacheFileSlicingEnabledAsync(SetCacheFileSlicingEnabledRequest request)
         {
-            await PostJsonAsync(GetUrl("pullzone/setCacheFileSlicingEnabled"), request);
+            await PostJsonAsync(GetUrl("pullzone/setCacheFileSlicingEnabled"), request).ConfigureAwait(false);
         }
 
         public async Task SetEnabledVaryParametersAsync(SetDisableCookiesEnabledRequest request)
         {
-            await PostJsonAsync(GetUrl("pullzone/setDisableCookiesEnabled"), request);
+            await PostJsonAsync(GetUrl("pullzone/setDisableCookiesEnabled"), request).ConfigureAwait(false);
         }
 
         public async Task SetCacheExpirationTimeAsync(SetCacheExpirationTimeRequest request)
         {
-            await PostJsonAsync(GetUrl("pullzone/setCacheExpirationTime"), request);
+            await PostJsonAsync(GetUrl("pullzone/setCacheExpirationTime"), request).ConfigureAwait(false);
         }
 
         public async Task DeletePullZoneAsync(long pullZoneId)
         {
-            await DeleteAsync(GetUrl("pullzone/" + pullZoneId));
+            await DeleteAsync(GetUrl("pullzone/" + pullZoneId)).ConfigureAwait(false);
         }
 
         public async Task SetForceSslAsync(SetForceSslRequest request)
         {
-            await PostJsonAsync(GetUrl("pullzone/setForceSSL"), request);
+            await PostJsonAsync(GetUrl("pullzone/setForceSSL"), request).ConfigureAwait(false);
         }
 
         public async Task LoadFreeCertificateAsync(LoadFreeCertificateRequest request)
         {
-            await GetAsync(GetUrl($"pullzone/loadFreeCertificate?hostname={HttpUtility.UrlEncode(request.Hostname)}"));
+            await GetAsync(GetUrl($"pullzone/loadFreeCertificate?hostname={HttpUtility.UrlEncode(request.Hostname)}")).ConfigureAwait(false);
         }
 
         public async Task SetTlsSupport(SetTlsSupportRequest request)
         {
-            await PostJsonAsync(GetUrl($"pullzone/setTlsSupport"), request);
+            await PostJsonAsync(GetUrl($"pullzone/setTlsSupport"), request).ConfigureAwait(false);
         }
 
         public async Task AddCertificateAsync(AddCertificateRequest request)
         {
-            await PostJsonAsync(GetUrl($"pullzone/addCertificate"), request);
+            await PostJsonAsync(GetUrl($"pullzone/addCertificate"), request).ConfigureAwait(false);
         }
 
         public async Task ResetSecurityKeyAsync(ResetSecurityKeyRequest request)
         {
-            await PostAsync(GetUrl("pullzone/requestSecurityKey?pullZoneId=" + request.Id.ToString()));
+            await PostAsync(GetUrl("pullzone/requestSecurityKey?pullZoneId=" + request.Id.ToString())).ConfigureAwait(false);
         }
 
         public async Task SetZoneSecurityEnabledAsync(SetZoneSecurityEnabledRequest request)
         {
-            await PostJsonAsync(GetUrl("pullzone/setZoneSecurityEnabled"), request);
+            await PostJsonAsync(GetUrl("pullzone/setZoneSecurityEnabled"), request).ConfigureAwait(false);
         }
 
         public async Task SetZoneSecurityIncludeHashRemoteIpEnabled(SetZoneSecurityIncludeHashRemoteIPEnabledRequest request)
         {
-            await PostJsonAsync(GetUrl("pullzone/setZoneSecurityIncludeHashRemoteIPEnabled"), request);
+            await PostJsonAsync(GetUrl("pullzone/setZoneSecurityIncludeHashRemoteIPEnabled"), request).ConfigureAwait(false);
         }
 
         public async Task<DownloadLogResult> DownloadLogAsync(DownloadLogRequest request)
@@ -128,7 +130,7 @@ namespace BunnyCdn
 
             string url = "https://logging.bunnycdn.com/" + dateString + "/" + request.PullZoneId + ".log";
 
-            var response = await SendMessageAsync(new HttpRequestMessage(HttpMethod.Post, url));
+            var response = await SendMessageAsync(new HttpRequestMessage(HttpMethod.Post, url)).ConfigureAwait(false);
 
             return new DownloadLogResult(response);
         }
@@ -139,12 +141,12 @@ namespace BunnyCdn
 
         public async Task AddHostnameAsync(AddHostnameRequest request)
         {
-            await PostJsonAsync(GetUrl("pullzone/addHostname"), request);
+            await PostJsonAsync(GetUrl("pullzone/addHostname"), request).ConfigureAwait(false);
         }
 
         public async Task DeleteHostnameAsync(DeleteHostnameRequest request)
         {
-            await DeleteAsync(GetUrl($"pullzone/deleteHostname?id={request.PullZoneId}&hostname={HttpUtility.UrlEncode(request.Hostname)}"));
+            await DeleteAsync(GetUrl($"pullzone/deleteHostname?id={request.PullZoneId}&hostname={HttpUtility.UrlEncode(request.Hostname)}")).ConfigureAwait(false);
         }
 
         #endregion
@@ -267,8 +269,7 @@ namespace BunnyCdn
                 Headers = {
                     { "Accept", "application/json" },
                 },
-                Content = new ByteArrayContent(json)
-                {
+                Content = new ByteArrayContent(json) {
                     Headers = { { "Content-Type", "application/json" } }
                 }
             });
@@ -304,7 +305,7 @@ namespace BunnyCdn
 
             message.Headers.Add("AccessKey", accessKey.Value);
 
-            HttpResponseMessage response = await http.SendAsync(message).ConfigureAwait(false);
+            HttpResponseMessage response = await http.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -320,11 +321,13 @@ namespace BunnyCdn
             return response;
         }
 
-        private async Task<T> GetAsync<T>(Uri path)
+        private async Task<T> GetAsync<T>(Uri url)
         {
-            var (_, responseText) = await GetAsync(path);
+            using var response = await SendMessageAsync(new HttpRequestMessage(HttpMethod.Get, url)).ConfigureAwait(false);
 
-            return JsonSerializer.Deserialize<T>(responseText);
+            using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+            return await JsonSerializer.DeserializeAsync<T>(responseStream).ConfigureAwait(false);
         }
     }
 }
