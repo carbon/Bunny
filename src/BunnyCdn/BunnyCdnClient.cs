@@ -59,9 +59,7 @@ namespace BunnyCdn
 
         public async Task<PullZone> CreatePullZoneAsync(CreatePullZoneRequest request)
         {
-            var (_, responseText) = await PostJsonAsync(GetUrl("pullzone"), request).ConfigureAwait(false);
-
-            return JsonSerializer.Deserialize<PullZone>(responseText);
+            return await PostJsonAsync<CreatePullZoneRequest, PullZone>(GetUrl("pullzone"), request).ConfigureAwait(false);
         }
 
         public async Task SetEnabledVaryParametersAsync(SetEnabledVaryParametersRequest request)
@@ -256,45 +254,59 @@ namespace BunnyCdn
 
         private Uri GetUrl(string path) => new Uri(baseUrl + path);
 
-        private async Task<(HttpStatusCode, string)> GetAsync(Uri url)
+        private async Task GetAsync(Uri url)
         {
-            return await SendAsync(new HttpRequestMessage(HttpMethod.Get, url));
+            using var response = await SendMessageAsync(new HttpRequestMessage(HttpMethod.Get, url)).ConfigureAwait(false);
         }
    
-        private async Task<(HttpStatusCode, string)> PostJsonAsync(Uri url, object data)   
+        private async Task<TResult> PostJsonAsync<TRequest, TResult>(Uri url, TRequest data)   
         {
             byte[] json = JsonSerializer.SerializeToUtf8Bytes(data, jso);
 
-            return await SendAsync(new HttpRequestMessage(HttpMethod.Post, url) {
+            var message = new HttpRequestMessage(HttpMethod.Post, url) {
                 Headers = {
                     { "Accept", "application/json" },
                 },
                 Content = new ByteArrayContent(json) {
                     Headers = { { "Content-Type", "application/json" } }
                 }
-            });
-        }
+            };
 
-        private async Task<(HttpStatusCode, string)> DeleteAsync(Uri url)
-        {
-            return await SendAsync(new HttpRequestMessage(HttpMethod.Delete, url)).ConfigureAwait(false);
-        }
-
-        private async Task<(HttpStatusCode, string)> PostAsync(Uri url)
-        {
-            return await SendAsync(new HttpRequestMessage(HttpMethod.Post, url)).ConfigureAwait(false);
-        }
-
-        private async Task<(HttpStatusCode, string)> SendAsync(HttpRequestMessage message)
-        {
             using HttpResponseMessage response = await SendMessageAsync(message).ConfigureAwait(false);
 
-            string responseText = response.Content != null 
-                ? await response.Content.ReadAsStringAsync().ConfigureAwait(false)
-                : string.Empty;
+            using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return (response.StatusCode, responseText);
+            return await JsonSerializer.DeserializeAsync<TResult>(responseStream).ConfigureAwait(false);
         }
+
+        private async Task PostJsonAsync<TRequest>(Uri url, TRequest data)
+        {
+            byte[] json = JsonSerializer.SerializeToUtf8Bytes(data, jso);
+
+            var message = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Headers = {
+                    { "Accept", "application/json" },
+                },
+                Content = new ByteArrayContent(json) {
+                    Headers = { { "Content-Type", "application/json" } }
+                }
+            };
+
+            using HttpResponseMessage response = await SendMessageAsync(message).ConfigureAwait(false);     
+        }
+
+        private async Task DeleteAsync(Uri url)
+        {
+            using var response = await SendMessageAsync(new HttpRequestMessage(HttpMethod.Delete, url)).ConfigureAwait(false);
+        }
+
+        private async Task PostAsync(Uri url)
+        {
+            using var response = await SendMessageAsync(new HttpRequestMessage(HttpMethod.Post, url)).ConfigureAwait(false);
+        }
+
+    
 
         private async Task<HttpResponseMessage> SendMessageAsync(HttpRequestMessage message)
         {
