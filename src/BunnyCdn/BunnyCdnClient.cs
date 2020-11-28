@@ -18,7 +18,7 @@ namespace BunnyCdn
         private readonly IBunnyCdnAccessKey accessKey;
         private readonly HttpClient http;
 
-        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions {
+        private static readonly JsonSerializerOptions jso = new () {
             IgnoreNullValues = true 
         };
 
