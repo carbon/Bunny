@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -16,7 +17,7 @@ namespace BunnyCdn
         private const string baseUrl = "https://bunnycdn.com/api/";
 
         private readonly IBunnyCdnAccessKey accessKey;
-        private readonly HttpClient http;
+        private readonly HttpClient httpClient;
 
         private static readonly JsonSerializerOptions jso = new () {
             IgnoreNullValues = true 
@@ -27,20 +28,25 @@ namespace BunnyCdn
         { }
 
         public BunnyCdnClient(IBunnyCdnAccessKey accessKey)
-            : this(accessKey, new HttpClient())
         {
-            this.accessKey = accessKey;
+            this.accessKey = accessKey ?? throw new ArgumentNullException(nameof(accessKey));
 
-            this.http = new HttpClient(new HttpClientHandler {
+#if NETSTANDARD2_0
+            this.httpClient = new HttpClient(new HttpClientHandler {
                 AutomaticDecompression = DecompressionMethods.GZip
             });
+#else
+            this.httpClient = new HttpClient(new SocketsHttpHandler {
+                AutomaticDecompression = DecompressionMethods.All               
+            });
+#endif
 
-            this.http.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "gzip");
+            this.httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "gzip");
         }
 
         public BunnyCdnClient(IBunnyCdnAccessKey accessKey, HttpClient httpClient)
         {
-            http = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
             this.accessKey = accessKey;
         }
@@ -94,17 +100,17 @@ namespace BunnyCdn
 
         public async Task LoadFreeCertificateAsync(LoadFreeCertificateRequest request)
         {
-            await GetAsync(GetUrl($"pullzone/loadFreeCertificate?hostname={HttpUtility.UrlEncode(request.Hostname)}")).ConfigureAwait(false);
+            await GetAsync(GetUrl("pullzone/loadFreeCertificate?hostname=" + HttpUtility.UrlEncode(request.Hostname))).ConfigureAwait(false);
         }
 
         public async Task SetTlsSupport(SetTlsSupportRequest request)
         {
-            await PostJsonAsync(GetUrl($"pullzone/setTlsSupport"), request).ConfigureAwait(false);
+            await PostJsonAsync(GetUrl("pullzone/setTlsSupport"), request).ConfigureAwait(false);
         }
 
         public async Task AddCertificateAsync(AddCertificateRequest request)
         {
-            await PostJsonAsync(GetUrl($"pullzone/addCertificate"), request).ConfigureAwait(false);
+            await PostJsonAsync(GetUrl("pullzone/addCertificate"), request).ConfigureAwait(false);
         }
 
         public async Task ResetSecurityKeyAsync(ResetSecurityKeyRequest request)
@@ -124,7 +130,7 @@ namespace BunnyCdn
 
         public async Task<DownloadLogResult> DownloadLogAsync(DownloadLogRequest request)
         {
-            string dateString = request.Date.ToString("MM-dd-yy");
+            string dateString = request.Date.ToString("MM-dd-yy", CultureInfo.InvariantCulture);
 
             string url = "https://logging.bunnycdn.com/" + dateString + "/" + request.PullZoneId + ".log";
 
@@ -153,12 +159,12 @@ namespace BunnyCdn
 
         public async Task AddOrUpdateEdgeRuleAsync(long pullZoneId, EdgeRule request)
         {
-            await PostJsonAsync(GetUrl($"pullzone/{pullZoneId}/edgerules/addOrUpdate"), request);
+            await PostJsonAsync(GetUrl($"pullzone/{pullZoneId}/edgerules/addOrUpdate"), request).ConfigureAwait(false);
         }
 
         public async Task DeleteEdgeRuleAsync(DeleteEdgeRuleRequest request)
         {
-            await DeleteAsync(GetUrl($"pullzone/{request.PullZoneId}/edgerules/{request.EdgeRuleId}"));
+            await DeleteAsync(GetUrl($"pullzone/{request.PullZoneId}/edgerules/{request.EdgeRuleId}")).ConfigureAwait(false);
         }
 
         #endregion
@@ -167,12 +173,12 @@ namespace BunnyCdn
 
         public async Task AddBlockedIpAsync(AddBlockedIpRequest request)
         {
-            await PostJsonAsync(GetUrl("pullzone/addBlockedIp"), request);
+            await PostJsonAsync(GetUrl("pullzone/addBlockedIp"), request).ConfigureAwait(false);
         }
 
         public async Task RemoveBlockedIpAsync(AddBlockedIpRequest request)
         {
-            await PostJsonAsync(GetUrl("pullzone/removeBlockedIp"), request);
+            await PostJsonAsync(GetUrl("pullzone/removeBlockedIp"), request).ConfigureAwait(false);
         }
 
         #endregion
@@ -181,22 +187,31 @@ namespace BunnyCdn
 
         public async Task<BillingSummary> GetBillingSummaryAsync()
         {
-            return await GetAsync< BillingSummary>(GetUrl("billing"));
+            return await GetAsync<BillingSummary>(GetUrl("billing")).ConfigureAwait(false);
         }
+
         #endregion
 
         #region Purging
 
-        public async Task<bool> PurgeUrlAsync(Uri url)
+        public Task<bool> PurgeUrlAsync(Uri url)
         {
-            await PostAsync(GetUrl("purge?url=" + HttpUtility.UrlEncode(url.ToString())));
+            if (url is null) 
+                throw new ArgumentNullException(nameof(url));
+
+            return PurgeUrlAsync(url.ToString());
+        }
+
+        public async Task<bool> PurgeUrlAsync(string url)
+        {
+            await PostAsync(GetUrl("purge?url=" + HttpUtility.UrlEncode(url))).ConfigureAwait(false);
 
             return true;
         }
 
         public async Task<bool> PurgePullZoneAsync(long pullZoneId)
         {
-            await PostAsync(GetUrl(($"pullzone/{pullZoneId}/purgeCache")));
+            await PostAsync(GetUrl($"pullzone/{pullZoneId}/purgeCache")).ConfigureAwait(false);
 
             return true;
         }
@@ -207,12 +222,12 @@ namespace BunnyCdn
 
         public async Task<GetStatisticsResult> GetStatisticsAsync(GetStatisticsRequest request)
         {
-            var paramaters = new Dictionary<string, string>();
+            var paramaters = new Dictionary<string, string>(4);
 
             if (request.Start is DateTime start && request.End is DateTime end)
             {          
-                paramaters.Add("dateFrom", start.ToString("yyyy-MM-dd"));
-                paramaters.Add("dateTo", end.ToString("yyyy-MM-dd"));
+                paramaters.Add("dateFrom", start.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                paramaters.Add("dateTo", end.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
 
             if (request.PullZoneId is long pullZoneId)
@@ -225,7 +240,7 @@ namespace BunnyCdn
                 paramaters.Add("serverZoneId", serverZoneId.ToString());
             }
 
-            return await GetAsync<GetStatisticsResult>(GetUrl("statistics" + DictionaryHelper.ToQueryString(paramaters)));
+            return await GetAsync<GetStatisticsResult>(GetUrl("statistics" + DictionaryHelper.ToQueryString(paramaters))).ConfigureAwait(false);
         }
 
         #endregion
@@ -236,23 +251,23 @@ namespace BunnyCdn
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-            using var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
+            using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
 
             var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            var json = await JsonSerializer.DeserializeAsync<string[]>(responseStream).ConfigureAwait(false);
+            var json = (await JsonSerializer.DeserializeAsync<string[]>(responseStream).ConfigureAwait(false))!;
 
             var servers = new IPAddress[json.Length];
 
             for (int i = 0; i < json.Length; i++)
             {
-                servers[i] = IPAddress.Parse(json[i].ToString());
+                servers[i] = IPAddress.Parse(json[i]);
             }
 
             return servers;
         }
 
-        private Uri GetUrl(string path) => new Uri(baseUrl + path);
+        private static Uri GetUrl(string path) => new Uri(baseUrl + path);
 
         private async Task GetAsync(Uri url)
         {
@@ -276,20 +291,21 @@ namespace BunnyCdn
 
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return await JsonSerializer.DeserializeAsync<TResult>(responseStream).ConfigureAwait(false);
+            return (await JsonSerializer.DeserializeAsync<TResult>(responseStream).ConfigureAwait(false))!;
         }
 
         private async Task PostJsonAsync<TRequest>(Uri url, TRequest data)
         {
             byte[] json = JsonSerializer.SerializeToUtf8Bytes(data, jso);
 
-            var message = new HttpRequestMessage(HttpMethod.Post, url)
-            {
+            var message = new HttpRequestMessage(HttpMethod.Post, url) {
                 Headers = {
                     { "Accept", "application/json" },
                 },
                 Content = new ByteArrayContent(json) {
-                    Headers = { { "Content-Type", "application/json" } }
+                    Headers = { 
+                        { "Content-Type", "application/json" }
+                    }
                 }
             };
 
@@ -306,27 +322,39 @@ namespace BunnyCdn
             using var response = await SendMessageAsync(new HttpRequestMessage(HttpMethod.Post, url)).ConfigureAwait(false);
         }
 
-    
-
-        private async Task<HttpResponseMessage> SendMessageAsync(HttpRequestMessage message)
+        private async Task<HttpResponseMessage> SendMessageAsync(HttpRequestMessage request)
         {
+            #if !NETSTANDARD2_0
+            request.Version = HttpVersion.Version20;
+            #endif
+
             if (accessKey.ShouldRenew)
             {
                 await accessKey.RenewAsync().ConfigureAwait(false);
             }
 
-            message.Headers.Add("AccessKey", accessKey.Value);
+            request.Headers.Add("AccessKey", accessKey.Value);
 
-            HttpResponseMessage response = await http.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
-                string responseText = response.Content != null
-                    ? await response.Content.ReadAsStringAsync() 
+                string responseText = response.Content is not null
+                    ? await response.Content.ReadAsStringAsync().ConfigureAwait(false)
                     : string.Empty;
 
                 response.Dispose();
 
+                if (responseText.StartsWith("{"))
+                {
+                    var error = JsonSerializer.Deserialize<BunnyCdnError>(responseText);
+
+                    if (error?.Message is not null)
+                    {
+                        throw new BunnyCdnException(response.StatusCode, error!);
+                    }
+                }
+                
                 throw new BunnyCdnException(response.StatusCode, responseText);
             }
            
@@ -335,11 +363,17 @@ namespace BunnyCdn
 
         private async Task<T> GetAsync<T>(Uri url)
         {
-            using var response = await SendMessageAsync(new HttpRequestMessage(HttpMethod.Get, url)).ConfigureAwait(false);
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+#if !NETSTANDARD2_0
+            request.Version = HttpVersion.Version20;
+#endif
+
+            using var response = await SendMessageAsync(request).ConfigureAwait(false);
 
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return await JsonSerializer.DeserializeAsync<T>(responseStream).ConfigureAwait(false);
+            return (await JsonSerializer.DeserializeAsync<T>(responseStream).ConfigureAwait(false))!;
         }
     }
 }
