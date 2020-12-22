@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>BunnyCdn</AssemblyName>
     <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
-    <Version>0.13.0</Version>
+    <Version>0.14.0</Version>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
 
@@ -15,7 +15,7 @@
     <PackageProjectUrl>https://github.com/carbon/BunnyCdn</PackageProjectUrl>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net5.0' ">
     <PackageReference Include="System.Text.Json" Version="5.0.0" />
   </ItemGroup>
 </Project>
