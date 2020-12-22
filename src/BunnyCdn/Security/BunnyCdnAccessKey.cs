@@ -12,8 +12,14 @@ namespace BunnyCdn
 
         public bool ShouldRenew => false;
 
-        public Task RenewAsync() => Task.CompletedTask;
-
+        public ValueTask RenewAsync()
+        {
+#if NETSTANDARD2_0
+            return new ValueTask();
+#else
+            return ValueTask.CompletedTask;
+#endif
+        }
         public string Value { get; }
     }
 }

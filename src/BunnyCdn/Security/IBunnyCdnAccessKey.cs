@@ -6,7 +6,7 @@ namespace BunnyCdn
     {
         bool ShouldRenew { get; }
 
-        Task RenewAsync();
+        ValueTask RenewAsync();
 
         string Value { get; }
     }
