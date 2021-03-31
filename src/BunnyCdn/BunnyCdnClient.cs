@@ -14,7 +14,7 @@ namespace BunnyCdn
 {
     public sealed partial class BunnyCdnClient
     {
-        private const string baseUrl = "https://bunnycdn.com/api/";
+        private const string baseUrl = "https://api.bunny.net/";
 
         private readonly IBunnyCdnAccessKey accessKey;
         private readonly HttpClient httpClient;
@@ -31,7 +31,7 @@ namespace BunnyCdn
         {
             this.accessKey = accessKey ?? throw new ArgumentNullException(nameof(accessKey));
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_1
             this.httpClient = new HttpClient(new HttpClientHandler {
                 AutomaticDecompression = DecompressionMethods.GZip
             });
@@ -267,7 +267,7 @@ namespace BunnyCdn
             return servers;
         }
 
-        private static Uri GetUrl(string path) => new Uri(baseUrl + path);
+        private static Uri GetUrl(string path) => new (baseUrl + path);
 
         private async Task GetAsync(Uri url)
         {

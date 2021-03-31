@@ -9,15 +9,14 @@ namespace BunnyCdn
     {
         private readonly HttpResponseMessage response;
 
-        public DownloadLogResult(HttpResponseMessage response)
+        internal DownloadLogResult(HttpResponseMessage response)
         {
             this.response = response;
         }
 
         public async Task<Stream> OpenAsync()
         {
-            return await this.response.Content.ReadAsStreamAsync();
-
+            return await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
         }
 
         public void Dispose()

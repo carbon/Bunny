@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>BunnyCdn</AssemblyName>
-    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
-    <Version>0.14.0</Version>
+    <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
+    <Version>0.16.0</Version>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
 
@@ -16,6 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'net5.0' ">
-    <PackageReference Include="System.Text.Json" Version="5.0.0" />
+    <PackageReference Include="System.Text.Json" Version="5.0.1" />
   </ItemGroup>
 </Project>
