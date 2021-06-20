@@ -92,6 +92,8 @@ namespace BunnyCdn
 
         public bool? EnableWebPVary { get; set; }
 
+        public bool? EnableAvifVary { get; set; }
+
         public bool? EnableCountryCodeVary { get; set; }
 
         public bool? EnableMobileVary { get; set; }

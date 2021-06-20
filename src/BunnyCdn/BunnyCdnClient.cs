@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -20,7 +21,7 @@ namespace BunnyCdn
         private readonly HttpClient httpClient;
 
         private static readonly JsonSerializerOptions jso = new () {
-            IgnoreNullValues = true 
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
         public BunnyCdnClient(string accessKey)
@@ -31,15 +32,9 @@ namespace BunnyCdn
         {
             this.accessKey = accessKey ?? throw new ArgumentNullException(nameof(accessKey));
 
-#if NETSTANDARD2_1
-            this.httpClient = new HttpClient(new HttpClientHandler {
-                AutomaticDecompression = DecompressionMethods.GZip
-            });
-#else
             this.httpClient = new HttpClient(new SocketsHttpHandler {
                 AutomaticDecompression = DecompressionMethods.All               
             });
-#endif
 
             this.httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "gzip");
         }
@@ -232,12 +227,12 @@ namespace BunnyCdn
 
             if (request.PullZoneId is long pullZoneId)
             {
-                paramaters.Add("pullZone", pullZoneId.ToString());
+                paramaters.Add("pullZone", pullZoneId.ToString(CultureInfo.InvariantCulture));
             }
 
             if (request.ServerZoneId is long serverZoneId)
             {
-                paramaters.Add("serverZoneId", serverZoneId.ToString());
+                paramaters.Add("serverZoneId", serverZoneId.ToString(CultureInfo.InvariantCulture));
             }
 
             return await GetAsync<GetStatisticsResult>(GetUrl("statistics" + DictionaryHelper.ToQueryString(paramaters))).ConfigureAwait(false);
@@ -245,11 +240,30 @@ namespace BunnyCdn
 
         #endregion
 
+
+        #region Video Libraries
+
+
+        public Task<VideoLibrary[]> ListVideoLibrariesAsync()
+        {
+            return GetAsync<VideoLibrary[]>(new Uri(baseUrl + "videolibrary"));
+        }
+
+        public Task<VideoLibrary> GetVideoLibraryAsync(long id)
+        {
+            var url = baseUrl + "videolibrary/" + id.ToString(CultureInfo.InvariantCulture);
+
+            return GetAsync<VideoLibrary>(new Uri(url));
+        }
+
+        #endregion
         public async Task<IPAddress[]> GetEdgeIpsAsync()
         {
-            const string url = "https://bunnycdn.com/api/system/edgeserverlist";
+            const string url = "https://api.bunny.net/system/edgeserverlist";
 
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            var request = new HttpRequestMessage(HttpMethod.Get, url) {
+                Headers = { { "Accept", "application/json" } }
+            };
 
             using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
 
@@ -324,10 +338,6 @@ namespace BunnyCdn
 
         private async Task<HttpResponseMessage> SendMessageAsync(HttpRequestMessage request)
         {
-            #if !NETSTANDARD2_0
-            request.Version = HttpVersion.Version20;
-            #endif
-
             if (accessKey.ShouldRenew)
             {
                 await accessKey.RenewAsync().ConfigureAwait(false);
@@ -345,7 +355,7 @@ namespace BunnyCdn
 
                 response.Dispose();
 
-                if (responseText.StartsWith("{"))
+                if (responseText.StartsWith('{'))
                 {
                     var error = JsonSerializer.Deserialize<BunnyCdnError>(responseText);
 
@@ -354,7 +364,13 @@ namespace BunnyCdn
                         throw new BunnyCdnException(response.StatusCode, error!);
                     }
                 }
-                
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new BunnyCdnException(response.StatusCode, "Unauthorized");
+
+                }
+
                 throw new BunnyCdnException(response.StatusCode, responseText);
             }
            
@@ -365,15 +381,20 @@ namespace BunnyCdn
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-#if !NETSTANDARD2_0
-            request.Version = HttpVersion.Version20;
-#endif
-
             using var response = await SendMessageAsync(request).ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                throw new Exception(responseText);
+            }
 
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return (await JsonSerializer.DeserializeAsync<T>(responseStream).ConfigureAwait(false))!;
+            var jsonResult = await JsonSerializer.DeserializeAsync<T>(responseStream).ConfigureAwait(false);
+
+            return jsonResult!;
         }
     }
 }

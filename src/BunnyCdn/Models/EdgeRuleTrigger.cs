@@ -15,14 +15,14 @@ namespace BunnyCdn
             PatternMatches = patternMatches;
         }
 
-        public Guid? Guid { get; set; }
+        public Guid? Guid { get; init; }
 
-        public string Parameter1 { get; set; }
+        public string Parameter1 { get; init; }
 
-        public string[] PatternMatches { get; set; }
+        public string[] PatternMatches { get; init; }
 
-        public EdgeRuleTriggerType Type { get; set; }
+        public EdgeRuleTriggerType Type { get; init; }
 
-        public MatchType PatternMatchingType { get; set; }
+        public MatchType PatternMatchingType { get; init; }
     }
 }

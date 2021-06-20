@@ -6,19 +6,19 @@ namespace BunnyCdn
 {
     public sealed class BillingRecord
     {
-        public long Id { get; set; }
+        public long Id { get; init; }
 
-        public decimal Amount { get; set; }
+        public decimal Amount { get; init; }
   
         // e.g. billing@company.com
-        public string Payer { get; set; }
+        public string Payer { get; init; }
 
-        public string PaymentId { get; set; }
+        public string PaymentId { get; init; }
 
-        public DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; init; }
 
-        public bool InvoiceAvailable { get; set; }
+        public bool InvoiceAvailable { get; init; }
 
-        public BillingType Type { get; set; }
+        public BillingType Type { get; init; }
     }
 }

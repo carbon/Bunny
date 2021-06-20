@@ -4,20 +4,20 @@ namespace BunnyCdn
 {
     public sealed class BillingSummary
     {
-        public decimal Balance { get; set; }
+        public decimal Balance { get; init; }
 
-        public decimal ThisMonthCharges { get; set; }
+        public decimal ThisMonthCharges { get; init; }
 
-        public BillingRecord[] BillingRecords { get; set; }
+        public BillingRecord[] BillingRecords { get; init; }
 
-        public decimal MonthlyChargesStorage { get; set; }
+        public decimal MonthlyChargesStorage { get; init; }
 
-        public decimal MonthlyChargesEUTraffic { get; set; }
+        public decimal MonthlyChargesEUTraffic { get; init; }
 
-        public decimal MonthlyChargesUSTraffic { get; set; }
+        public decimal MonthlyChargesUSTraffic { get; init; }
 
-        public decimal MonthlyChargesASIATraffic { get; set; }
+        public decimal MonthlyChargesASIATraffic { get; init; }
 
-        public decimal MonthlyChargesSATraffic { get; set; }
+        public decimal MonthlyChargesSATraffic { get; init; }
     }
 }
