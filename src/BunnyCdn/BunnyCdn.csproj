@@ -2,20 +2,15 @@
 
   <PropertyGroup>
     <AssemblyName>BunnyCdn</AssemblyName>
-    <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
-    <Version>0.16.0</Version>
-    <LangVersion>9</LangVersion>
+    <TargetFramework>net5.0</TargetFramework>
+    <Version>0.17.0</Version>
     <Nullable>enable</Nullable>
 
     <Authors>iamcarbon</Authors>
-    <Description>A .NETStandard API for BunnyCDN.</Description>
+    <Description>A modern API for BunnyCDN.</Description>
     <PackageId>BunnyCdn</PackageId>
     <PackageTags>bunnycdn async netstandard</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/carbon/BunnyCdn</PackageProjectUrl>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net5.0' ">
-    <PackageReference Include="System.Text.Json" Version="5.0.1" />
-  </ItemGroup>
 </Project>
