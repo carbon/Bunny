@@ -1,5 +1,4 @@
-﻿
-using System.Text.Json;
+﻿using System.Text.Json;
 
 using Xunit;
 
@@ -10,16 +9,12 @@ namespace BunnyCdn.Tests
         [Fact]
         public void Serialize()
         {
-            _ = new BunnyCdnClient("abc");
-
             var rule = new EdgeRule
             {
                 ActionType = EdgeRuleActionType.BlockRequest,
                 Description = "RULE NAME",
-                Triggers = new[]
-                {
-                    new EdgeRuleTrigger
-                    {
+                Triggers = new[] {
+                    new EdgeRuleTrigger {
                        Parameter1 = "abc",
                        PatternMatches = new[] { "1", "2", "3" },
                        PatternMatchingType = MatchType.Any,
@@ -44,7 +39,7 @@ namespace BunnyCdn.Tests
       ""PatternMatchingType"": 0
     }
   ]
-}", JsonSerializer.Serialize(rule, new JsonSerializerOptions { WriteIndented = true, IgnoreNullValues = true }));
+}", JsonSerializer.Serialize(rule, JSO.Default));
         }
 
     }
