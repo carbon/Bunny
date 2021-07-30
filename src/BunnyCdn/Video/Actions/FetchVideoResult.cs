@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace BunnyCdn
 {
-    public class FetchVideoResult
+    public sealed class FetchVideoResult
     {
         [JsonPropertyName("success")]
         public bool Success { get; init; }
