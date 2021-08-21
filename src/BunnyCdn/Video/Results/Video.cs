@@ -7,16 +7,11 @@ namespace BunnyCdn
 {
     public sealed class Video
     {
-
-        // {
-        //   "captions":[],
-        //   "hasMP4Fallback":false,
-        //   "collectionId":"",
-        //   "thumbnailFileName":"thumbnail.jpg"
-        // }
-
         [JsonPropertyName("videoLibraryId")]
         public long VideoLibraryId { get; init; }
+
+        [JsonPropertyName("collectionId")]
+        public string CollectionId { get; init; }
 
         [JsonPropertyName("guid")]
         public Guid Guid { get; init; }
@@ -54,11 +49,19 @@ namespace BunnyCdn
         [JsonPropertyName("encodeProgress")]
         public double EncodeProgress { get; init; }
 
+        [JsonPropertyName("hasMP4Fallback")]
+        public bool HasMp4Fallback { get; init; }
+
         [JsonPropertyName("storageSize")]
         public long StorageSize { get; init; }
 
         [JsonPropertyName("availableResolutions")]
         public string AvailableResolutions { get; init; }
 
+        [JsonPropertyName("thumbnailFileName")]
+        public string ThumbnailFileName { get; init; }
+
+        // TODO: 
+        //  "captions":[],
     }
 }
