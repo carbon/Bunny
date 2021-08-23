@@ -98,8 +98,6 @@ namespace BunnyCdn
 
             var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            throw new Exception(responseText);
-
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
             var jsonResult = await JsonSerializer.DeserializeAsync<T>(responseStream).ConfigureAwait(false);
