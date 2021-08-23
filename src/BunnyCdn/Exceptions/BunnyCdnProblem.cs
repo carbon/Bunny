@@ -8,16 +8,16 @@ namespace BunnyCdn.Exceptions
     public sealed class BunnyCdnProblem
     {
         [JsonPropertyName("type")]
-        public string Type { get; set; }
+        public string Type { get; init; }
 
         [JsonPropertyName("title")]
-        public string Title { get; set; }
+        public string Title { get; init; }
 
         [JsonPropertyName("status")]
-        public int Status { get; set; }
+        public int Status { get; init; }
 
         [JsonPropertyName("errors")]
-        public Dictionary<string, string[]> Errors { get; set; }
+        public Dictionary<string, string[]> Errors { get; init; }
 
         // "errors":{"Title":["The Title field is required."]
     }
