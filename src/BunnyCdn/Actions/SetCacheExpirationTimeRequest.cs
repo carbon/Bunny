@@ -1,22 +1,19 @@
-﻿using System;
+﻿namespace BunnyCdn;
 
-namespace BunnyCdn
+public sealed class SetCacheExpirationTimeRequest
 {
-    public sealed class SetCacheExpirationTimeRequest
+    public SetCacheExpirationTimeRequest(long pullZoneId, int expirationTime)
     {
-        public SetCacheExpirationTimeRequest(long pullZoneId, int expirationTime)
+        if (expirationTime < 0)
         {
-            if (expirationTime < 0)
-            {
-                throw new ArgumentException("Must be 0 or greater", nameof(expirationTime));
-            }
-
-            PullZoneId = pullZoneId;
-            ExpirationTime = expirationTime;
+            throw new ArgumentException("Must be 0 or greater", nameof(expirationTime));
         }
 
-        public long PullZoneId { get; }
-
-        public int ExpirationTime { get; }
+        PullZoneId = pullZoneId;
+        ExpirationTime = expirationTime;
     }
+
+    public long PullZoneId { get; }
+
+    public int ExpirationTime { get; }
 }

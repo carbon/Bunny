@@ -1,17 +1,16 @@
-﻿using System;
+﻿namespace BunnyCdn;
 
-namespace BunnyCdn
+public sealed class DeleteHostnameRequest
 {
-    public sealed class DeleteHostnameRequest
+    public DeleteHostnameRequest(long pullZoneId, string hostname)
     {
-        public DeleteHostnameRequest(long pullZoneId, string hostname)
-        {
-            PullZoneId = pullZoneId;
-            Hostname = hostname ?? throw new ArgumentNullException(nameof(hostname));
-        }
-
-        public long PullZoneId { get; }
-
-        public string Hostname { get; }
+        ArgumentNullException.ThrowIfNull(hostname);
+            
+        PullZoneId = pullZoneId;
+        Hostname = hostname;
     }
+
+    public long PullZoneId { get; }
+
+    public string Hostname { get; }
 }

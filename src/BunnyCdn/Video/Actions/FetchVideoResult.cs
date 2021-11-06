@@ -2,17 +2,16 @@
 
 using System.Text.Json.Serialization;
 
-namespace BunnyCdn
+namespace BunnyCdn;
+
+public sealed class FetchVideoResult
 {
-    public sealed class FetchVideoResult
-    {
-        [JsonPropertyName("success")]
-        public bool Success { get; init; }
+    [JsonPropertyName("success")]
+    public bool Success { get; init; }
 
-        [JsonPropertyName("message")]
-        public string Message { get; init; }
+    [JsonPropertyName("message")]
+    public string Message { get; init; }
 
-        [JsonPropertyName("statusCode")]
-        public int StatusCode { get; init; }
-    }
+    [JsonPropertyName("statusCode")]
+    public int StatusCode { get; init; }
 }

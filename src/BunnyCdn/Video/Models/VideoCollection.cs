@@ -1,9 +1,8 @@
 ﻿#nullable disable
 
-namespace BunnyCdn
+namespace BunnyCdn;
+
+public class VideoCollection
 {
-    public class VideoCollection
-    {
-        public string Name { get; set; }
-    }
+    public string Name { get; set; }
 }

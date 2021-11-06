@@ -1,29 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
-namespace BunnyCdn.Serialization
+namespace BunnyCdn.Serialization;
+
+internal static class DictionaryHelper
 {
-    internal static class DictionaryHelper
+    public static string ToQueryString(Dictionary<string, string> dic)
     {
-        public static string ToQueryString(Dictionary<string, string> dic)
+        var sb = new StringBuilder();
+
+        sb.Append('?');
+
+        foreach (var entry in dic)
         {
-            var sb = new StringBuilder();
-
-            sb.Append('?');
-
-            foreach (var entry in dic)
+            if (sb.Length > 1)
             {
-                if (sb.Length > 1)
-                {
-                    sb.Append('&');
-                }
-
-                sb.Append(entry.Key);
-                sb.Append('=');
-                sb.Append(entry.Value);
+                sb.Append('&');
             }
 
-            return sb.ToString();
+            sb.Append(entry.Key);
+            sb.Append('=');
+            sb.Append(entry.Value);
         }
+
+        return sb.ToString();
     }
 }

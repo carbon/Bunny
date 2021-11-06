@@ -1,15 +1,14 @@
 ﻿using System.Threading.Tasks;
 
-namespace BunnyCdn
+namespace BunnyCdn;
+
+public interface IBunnyCdnAccessKey
 {
-    public interface IBunnyCdnAccessKey
-    {
-        bool ShouldRenew { get; }
+    bool ShouldRenew { get; }
 
-        ValueTask RenewAsync();
+    ValueTask RenewAsync();
 
-        string Value { get; }
-    }
+    string Value { get; }
 }
 
 // This contract may be implemented to allow keys to be rotated in production

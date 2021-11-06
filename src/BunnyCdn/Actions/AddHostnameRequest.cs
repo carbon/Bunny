@@ -1,17 +1,16 @@
-﻿using System;
+﻿namespace BunnyCdn;
 
-namespace BunnyCdn
+public sealed class AddHostnameRequest
 {
-    public sealed class AddHostnameRequest
+    public AddHostnameRequest(long pullZoneId, string hostname)
     {
-        public AddHostnameRequest(long pullZoneId, string hostname)
-        {
-            PullZoneId = pullZoneId;
-            Hostname = hostname ?? throw new ArgumentNullException(nameof(hostname));
-        }
+        ArgumentNullException.ThrowIfNull(hostname);
 
-        public long PullZoneId { get; }
-
-        public string Hostname { get; }
+        PullZoneId = pullZoneId;
+        Hostname = hostname;
     }
+
+    public long PullZoneId { get; }
+
+    public string Hostname { get; }
 }

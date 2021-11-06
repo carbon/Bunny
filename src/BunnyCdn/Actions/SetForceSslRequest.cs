@@ -1,20 +1,19 @@
-﻿using System;
+﻿namespace BunnyCdn;
 
-namespace BunnyCdn
+public sealed class SetForceSslRequest
 {
-    public sealed class SetForceSslRequest
+    public SetForceSslRequest(long pullZoneId, string hostname, bool forceSsl)
     {
-        public SetForceSslRequest(long pullZoneId, string hostname, bool forceSsl)
-        {
-            PullZoneId = pullZoneId;
-            Hostname = hostname ?? throw new ArgumentNullException(nameof(hostname));
-            ForceSSL = forceSsl;
-        }
+        ArgumentNullException.ThrowIfNull(hostname);
 
-        public long PullZoneId { get; }
-
-        public string Hostname { get; }
-
-        public bool ForceSSL { get; }
+        PullZoneId = pullZoneId;
+        Hostname = hostname;
+        ForceSSL = forceSsl;
     }
+
+    public long PullZoneId { get; }
+
+    public string Hostname { get; }
+
+    public bool ForceSSL { get; }
 }

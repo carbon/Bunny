@@ -1,14 +1,13 @@
-﻿using System;
+﻿namespace BunnyCdn;
 
-namespace BunnyCdn
+public sealed class LoadFreeCertificateRequest
 {
-    public sealed class LoadFreeCertificateRequest
+    public LoadFreeCertificateRequest(string hostname)
     {
-        public LoadFreeCertificateRequest(string hostname)
-        {
-            Hostname = hostname ?? throw new ArgumentNullException(nameof(hostname));
-        }
+        ArgumentNullException.ThrowIfNull(hostname);
 
-        public string Hostname { get; }
+        Hostname = hostname;
     }
+
+    public string Hostname { get; }
 }

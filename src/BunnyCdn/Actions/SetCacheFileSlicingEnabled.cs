@@ -1,15 +1,14 @@
-﻿namespace BunnyCdn
+﻿namespace BunnyCdn;
+
+public sealed class SetCacheFileSlicingEnabledRequest
 {
-    public sealed class SetCacheFileSlicingEnabledRequest
+    public SetCacheFileSlicingEnabledRequest(long pullZoneId, bool value)
     {
-        public SetCacheFileSlicingEnabledRequest(long pullZoneId, bool value)
-        {
-            Id = pullZoneId;
-            Value = value;
-        }
-
-        public long Id { get; }
-
-        public bool Value { get; }
+        Id = pullZoneId;
+        Value = value;
     }
+
+    public long Id { get; }
+
+    public bool Value { get; }
 }

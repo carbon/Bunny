@@ -1,13 +1,12 @@
 ﻿#nullable disable
 
-namespace BunnyCdn
+namespace BunnyCdn;
+
+public class CreateVideoLibraryRequest
 {
-    public class CreateVideoLibraryRequest
-    {
-        public long Id { get; set; }
+    public long Id { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public string[] ReplicationRegions { get; set; }
-    }
+    public string[] ReplicationRegions { get; set; }
 }

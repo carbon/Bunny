@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace BunnyCdn
+namespace BunnyCdn;
+
+public sealed class DeleteEdgeRuleRequest
 {
-    public sealed class DeleteEdgeRuleRequest
+    public DeleteEdgeRuleRequest(long pullZoneId, Guid edgeRuleId)
     {
-        public DeleteEdgeRuleRequest(long pullZoneId, Guid edgeRuleId)
-        {
-            PullZoneId = pullZoneId;
-            EdgeRuleId = edgeRuleId;
-        }
-
-        public long PullZoneId { get; }
-
-        public Guid EdgeRuleId { get; }
+        PullZoneId = pullZoneId;
+        EdgeRuleId = edgeRuleId;
     }
+
+    public long PullZoneId { get; }
+
+    public Guid EdgeRuleId { get; }
 }

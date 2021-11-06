@@ -1,18 +1,18 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 
-namespace BunnyCdn
+namespace BunnyCdn;
+
+public sealed class AddBlockedIpRequest
 {
-    public sealed class AddBlockedIpRequest
+    public AddBlockedIpRequest(long pullZoneId, IPAddress blockedIp)
     {
-        public AddBlockedIpRequest(long pullZoneId, IPAddress blockedIp)
-        {
-            PullZoneId = pullZoneId;
-            BlockedIp = blockedIp ?? throw new ArgumentNullException(nameof(blockedIp));
-        }
+        ArgumentNullException.ThrowIfNull(blockedIp);
 
-        public long PullZoneId { get; }
-
-        public IPAddress BlockedIp { get; }
+        PullZoneId = pullZoneId;
+        BlockedIp = blockedIp;
     }
+
+    public long PullZoneId { get; }
+
+    public IPAddress BlockedIp { get; }
 }
