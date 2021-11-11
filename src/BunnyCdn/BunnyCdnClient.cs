@@ -127,9 +127,9 @@ public sealed partial class BunnyCdnClient
 
     public async Task<DownloadLogResult> DownloadLogAsync(DownloadLogRequest request)
     {
-        const string loggingUri = "https://logging.bunnycdn.com/";
+        const string baseUrl = "https://logging.bunnycdn.com";
 
-        string url = string.Create(CultureInfo.InvariantCulture, $"{loggingUri}/{request.Date:MM-dd-yy}/{request.PullZoneId}.log");
+        string url = string.Create(CultureInfo.InvariantCulture, $"{baseUrl}/{request.Date:MM-dd-yy}/{request.PullZoneId}.log");
 
         var response = await SendMessageAsync(new HttpRequestMessage(HttpMethod.Post, url)).ConfigureAwait(false);
 
@@ -366,10 +366,15 @@ public sealed partial class BunnyCdnClient
                 }
             }
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            if (response.StatusCode is HttpStatusCode.Unauthorized)
             {
                 throw new BunnyCdnException(response.StatusCode, "Unauthorized");
 
+            }
+
+            if (string.IsNullOrEmpty(responseText))
+            {
+                responseText = response.StatusCode.ToString();
             }
 
             throw new BunnyCdnException(response.StatusCode, responseText);
