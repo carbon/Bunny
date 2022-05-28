@@ -62,6 +62,13 @@ public sealed class BunnyVideoClient
         return await GetJsonAsync<Video>(url).ConfigureAwait(false);
     }
 
+    public Task<ListVideosResult> ListVideosAsync(long libraryId)
+    {
+        var url = baseUri + "library/" + libraryId + "/videos";
+
+        return GetJsonAsync<ListVideosResult>(url);
+    }
+
     public async Task CreateVideoCollectionAsync(CreateVideoCollection request)
     {
         string url = baseUri + $"library/{request.LibraryId}/collections";
