@@ -61,6 +61,12 @@ namespace BunnyCdn
         [JsonPropertyName("thumbnailFileName")]
         public string ThumbnailFileName { get; init; }
 
+        [JsonPropertyName("metaTags")]
+        public MetaDataItem[] MetaTags { get; set; }
+
+        [JsonPropertyName("category")]
+        public String Category { get; init; }
+
         // TODO: 
         //  "captions":[],
     }
