@@ -46,6 +46,30 @@ public sealed class BunnyVideoClient
         return jsonResult!;
     }
 
+    public async Task<VideoUploadResult> UploadVideoAsync(long libraryId, Guid videoId, byte[] fileContent)
+    {
+        string url = baseUri + $"library/{libraryId}/videos/{videoId}";
+
+        var requestMessage = new HttpRequestMessage(HttpMethod.Put, url)
+        {
+            Content = new ByteArrayContent(fileContent)
+            {
+                Headers = { { "Content-Type", "application/json" } }
+            }
+        };
+
+        using var response = await SendMessageAsync(requestMessage).ConfigureAwait(false);
+
+        var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+
+        using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+        var jsonResult = await JsonSerializer.DeserializeAsync<VideoUploadResult>(responseStream).ConfigureAwait(false);
+
+        return jsonResult!;
+    }
+
     public async Task FetchVideoAsync(FetchVideoRequest request) 
     {
         string url = baseUri + $"library/{request.LibraryId}/videos/{request.VideoId}/fetch";
