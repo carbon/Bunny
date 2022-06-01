@@ -136,6 +136,22 @@ public sealed class BunnyVideoClient
         return jsonResult!;
     }
 
+    private async Task<T> PostAsync<T>(string url)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, url)
+        {
+
+        };
+
+        using var response = await SendMessageAsync(request).ConfigureAwait(false);
+
+        using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+        var jsonResult = await JsonSerializer.DeserializeAsync<T>(responseStream).ConfigureAwait(false);
+
+        return jsonResult;
+    }
+
     private async Task PostJsonAsync<T>(string url, T data)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, url)
