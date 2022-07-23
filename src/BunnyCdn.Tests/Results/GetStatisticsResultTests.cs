@@ -1,8 +1,4 @@
-using System;
-using System.Linq;
 using System.Text.Json;
-
-using Xunit;
 
 namespace BunnyCdn.Tests
 {
@@ -42,7 +38,6 @@ namespace BunnyCdn.Tests
                 { "EU: London, UK",        1 },
                 { "NA: Los Angeles, CA",   2 },
             }
-           
         };
     }
 }
