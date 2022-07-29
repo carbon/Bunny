@@ -1,26 +1,24 @@
 ﻿#nullable disable
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace BunnyCdn.Exceptions
+namespace BunnyCdn.Exceptions;
+
+public sealed class BunnyCdnProblem
 {
-    public sealed class BunnyCdnProblem
-    {
-        [JsonPropertyName("type")]
-        public string Type { get; init; }
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
 
-        [JsonPropertyName("title")]
-        public string Title { get; init; }
+    [JsonPropertyName("title")]
+    public string Title { get; init; }
 
-        [JsonPropertyName("status")]
-        public int Status { get; init; }
+    [JsonPropertyName("status")]
+    public int Status { get; init; }
 
-        [JsonPropertyName("errors")]
-        public Dictionary<string, string[]> Errors { get; init; }
+    [JsonPropertyName("errors")]
+    public Dictionary<string, string[]> Errors { get; init; }
 
-        // "errors":{"Title":["The Title field is required."]
-    }
+    // "errors":{"Title":["The Title field is required."]
 }
 
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BunnyCdn
+﻿namespace BunnyCdn
 {
     public sealed class DownloadLogRequest
     {

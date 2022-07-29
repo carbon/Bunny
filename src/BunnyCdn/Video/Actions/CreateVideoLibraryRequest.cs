@@ -2,7 +2,7 @@
 
 namespace BunnyCdn;
 
-public class CreateVideoLibraryRequest
+public sealed class CreateVideoLibraryRequest
 {
     public long Id { get; set; }
 

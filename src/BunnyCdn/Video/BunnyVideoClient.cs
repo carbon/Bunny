@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Globalization;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 
@@ -8,7 +9,7 @@ namespace BunnyCdn;
 
 public sealed class BunnyVideoClient
 {
-    private const string baseUri = "https://video.bunnycdn.com/";
+    private const string baseUri = "https://video.bunnycdn.com";
 
     private readonly HttpClient httpClient = new () {
         Timeout = TimeSpan.FromMinutes(10) 
@@ -25,7 +26,7 @@ public sealed class BunnyVideoClient
 
     public async Task<Video> CreateVideoAsync(CreateVideoRequest request) 
     {
-        string url = baseUri + $"library/{request.LibraryId}/videos";
+        string url = string.Create(CultureInfo.InvariantCulture, $"{baseUri}/library/{request.LibraryId}/videos");
 
         var requestMessage = new HttpRequestMessage(HttpMethod.Post, url)
         {
@@ -48,7 +49,7 @@ public sealed class BunnyVideoClient
 
     public async Task FetchVideoAsync(FetchVideoRequest request) 
     {
-        string url = baseUri + $"library/{request.LibraryId}/videos/{request.VideoId}/fetch";
+        string url = string.Create(CultureInfo.InvariantCulture, $"{baseUri}/library/{request.LibraryId}/videos/{request.VideoId}/fetch");
 
         // {"success":true,"message":"OK","statusCode":200}
 
@@ -57,35 +58,35 @@ public sealed class BunnyVideoClient
 
     public async Task<Video> GetVideoAsync(long libraryId, Guid videoId)
     {
-        string url = baseUri + $"library/{libraryId}/videos/{videoId}";
+        string url = string.Create(CultureInfo.InvariantCulture, $"{baseUri}/library/{libraryId}/videos/{videoId}");
 
         return await GetJsonAsync<Video>(url).ConfigureAwait(false);
     }
 
     public async Task CreateVideoCollectionAsync(CreateVideoCollection request)
     {
-        string url = baseUri + $"library/{request.LibraryId}/collections";
+        string url = string.Create(CultureInfo.InvariantCulture, $"{baseUri}/library/{request.LibraryId}/collections");
 
         await PostJsonAsync(url, request).ConfigureAwait(false);
     }
 
     public Task<ListVideoCollectionResult> ListCollectionsAsync(long libraryId)
     {
-        var url = baseUri + "library/" + libraryId + "/collections";
+        var url = string.Create(CultureInfo.InvariantCulture, $"{baseUri}/library/{libraryId}/collections");
 
         return GetJsonAsync<ListVideoCollectionResult>(url);
     }
 
     public Task<VideoCollection> GetCollectionAsync(long libraryId, string collectionId)
     {
-        var url = baseUri + "library/" + libraryId + "/collections/" + collectionId;
+        var url = string.Create(CultureInfo.InvariantCulture, $"{baseUri}/library/{libraryId}/collections/{collectionId}");
 
         return GetJsonAsync<VideoCollection>(url);
     }
 
     public async Task DeleteVideoAsync(long libraryId, long videoId) 
     {
-        var url = baseUri + "library/" + libraryId + "/videos/" + videoId;
+        var url = string.Create(CultureInfo.InvariantCulture, $"{baseUri}/library/{libraryId}/videos/{videoId}");
 
         await DeleteAsync(url).ConfigureAwait(false);
     }
@@ -153,7 +154,7 @@ public sealed class BunnyVideoClient
 
             response.Dispose();
 
-            throw new Exception(response.StatusCode + "|" + responseText);
+            throw new Exception($"{response.StatusCode} | {responseText}");
         }
 
         return response;

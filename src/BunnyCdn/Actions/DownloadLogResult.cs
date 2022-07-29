@@ -1,27 +1,24 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net.Http;
-using System.Threading.Tasks;
 
-namespace BunnyCdn
+namespace BunnyCdn;
+
+public sealed class DownloadLogResult : IDisposable
 {
-    public sealed class DownloadLogResult : IDisposable
+    private readonly HttpResponseMessage _response;
+
+    internal DownloadLogResult(HttpResponseMessage response)
     {
-        private readonly HttpResponseMessage response;
+        _response = response;
+    }
 
-        internal DownloadLogResult(HttpResponseMessage response)
-        {
-            this.response = response;
-        }
+    public async Task<Stream> OpenAsync()
+    {
+        return await _response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+    }
 
-        public async Task<Stream> OpenAsync()
-        {
-            return await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-        }
-
-        public void Dispose()
-        {
-            response.Dispose();
-        }
+    public void Dispose()
+    {
+        _response.Dispose();
     }
 }
