@@ -1,21 +1,20 @@
-﻿#nullable enable
+﻿#nullable disable
 
 using System.Text.Json.Serialization;
 
-namespace BunnyCdn
+namespace BunnyCdn;
+
+public sealed class ListVideosResult
 {
-    public sealed class ListVideosResult
-    {
-        [JsonPropertyName("totalItems")]
-        public long TotalItems { get; init; }
+    [JsonPropertyName("totalItems")]
+    public long TotalItems { get; init; }
 
-        [JsonPropertyName("currentPage")]
-        public long CurrentPage { get; init; }
+    [JsonPropertyName("currentPage")]
+    public long CurrentPage { get; init; }
 
-        [JsonPropertyName("itemsPerPage")]
-        public long ItemsPerPage { get; init; }
+    [JsonPropertyName("itemsPerPage")]
+    public long ItemsPerPage { get; init; }
 
-        [JsonPropertyName("items")]
-        public Video[] Items { get; init; }
-    }
+    [JsonPropertyName("items")]
+    public Video[] Items { get; init; }
 }

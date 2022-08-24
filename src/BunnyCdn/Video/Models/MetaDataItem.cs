@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿#nullable disable
+
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace BunnyCdn
+namespace BunnyCdn;
+
+public sealed class MetaDataItem
 {
-    public class MetaDataItem
-    {
-        [JsonPropertyName("property")]
-        public String Property { get; set; }
+    [JsonPropertyName("property")]
+    public string Property { get; set; }
 
-        [JsonPropertyName("value")]
-        public String Value { get; set; }
-
-    }
+    [JsonPropertyName("value")]
+    public string Value { get; set; }
 }

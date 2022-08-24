@@ -47,9 +47,9 @@ public sealed class BunnyVideoClient
         return jsonResult!;
     }
 
-    public async Task<VideoUploadResult> UploadVideoAsync(long libraryId, Guid videoId, byte[] fileContent)
+    public async Task<UploadVideoResult> UploadVideoAsync(long libraryId, Guid videoId, byte[] fileContent)
     {
-        string url = baseUri + $"library/{libraryId}/videos/{videoId}";
+        string url = $"{baseUri}/library/{libraryId}/videos/{videoId}";
 
         var requestMessage = new HttpRequestMessage(HttpMethod.Put, url)
         {
@@ -66,7 +66,7 @@ public sealed class BunnyVideoClient
 
         using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-        var jsonResult = await JsonSerializer.DeserializeAsync<VideoUploadResult>(responseStream).ConfigureAwait(false);
+        var jsonResult = await JsonSerializer.DeserializeAsync<UploadVideoResult>(responseStream).ConfigureAwait(false);
 
         return jsonResult!;
     }
@@ -89,7 +89,7 @@ public sealed class BunnyVideoClient
 
     public Task<ListVideosResult> ListVideosAsync(long libraryId)
     {
-        var url = baseUri + "library/" + libraryId + "/videos";
+        var url = string.Create(CultureInfo.InvariantCulture, $"{baseUri}/library/{libraryId}/videos");
 
         return GetJsonAsync<ListVideosResult>(url);
     }
@@ -103,7 +103,7 @@ public sealed class BunnyVideoClient
 
     public async Task<Video> ReEncodeVideoAsync(long libraryId, Guid videoId)
     {
-        string url = baseUri + $"library/{libraryId}/videos/{videoId}/reencode";
+        string url = string.Create(CultureInfo.InvariantCulture, $"{baseUri}/library/{libraryId}/videos/{videoId}/reencode");
 
         return await PostAsync<Video>(url);
     }
@@ -146,10 +146,7 @@ public sealed class BunnyVideoClient
 
     private async Task<T> PostAsync<T>(string url)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, url)
-        {
-
-        };
+        var request = new HttpRequestMessage(HttpMethod.Post, url);
 
         using var response = await SendMessageAsync(request).ConfigureAwait(false);
 
@@ -157,7 +154,7 @@ public sealed class BunnyVideoClient
 
         var jsonResult = await JsonSerializer.DeserializeAsync<T>(responseStream).ConfigureAwait(false);
 
-        return jsonResult;
+        return jsonResult!;
     }
 
     private async Task PostJsonAsync<T>(string url, T data)

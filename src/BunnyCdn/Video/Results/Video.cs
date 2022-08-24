@@ -64,7 +64,7 @@ public sealed class Video
     public MetaDataItem[] MetaTags { get; set; }
 
     [JsonPropertyName("category")]
-    public String Category { get; init; }
+    public string Category { get; init; }
 
     // TODO: 
     //  "captions":[],
