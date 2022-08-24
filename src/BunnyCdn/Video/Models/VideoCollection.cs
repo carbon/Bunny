@@ -2,7 +2,7 @@
 
 namespace BunnyCdn;
 
-public class VideoCollection
+public sealed class VideoCollection
 {
     public string Name { get; set; }
 }

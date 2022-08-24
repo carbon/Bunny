@@ -1,17 +1,16 @@
 ﻿using System.Net;
 
-namespace BunnyCdn
+namespace BunnyCdn;
+
+public sealed class RemoveBlockedIpRequest
 {
-    public sealed class RemoveBlockedIpRequest
+    public RemoveBlockedIpRequest(long pullZoneId, IPAddress blockedIp)
     {
-        public RemoveBlockedIpRequest(long pullZoneId, IPAddress blockedIp)
-        {
-            PullZoneId = pullZoneId;
-            BlockedIp = blockedIp;
+        PullZoneId = pullZoneId;
+        BlockedIp = blockedIp;
 
-        }
-        public long PullZoneId { get; }
-
-        public IPAddress BlockedIp { get; }
     }
+    public long PullZoneId { get; }
+
+    public IPAddress BlockedIp { get; }
 }

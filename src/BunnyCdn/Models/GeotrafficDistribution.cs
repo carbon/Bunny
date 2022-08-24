@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
+﻿namespace BunnyCdn;
 
-namespace BunnyCdn
+public sealed class GeotrafficDistribution : Dictionary<string, long>
 {
-    public sealed class GeotrafficDistribution : Dictionary<string, long>
-    {
-        public GeotrafficDistribution() { }
+    public GeotrafficDistribution() { }
 
-        public GeotrafficDistribution(int capacity)
-            : base(capacity) { }
-    }
+    public GeotrafficDistribution(int capacity)
+        : base(capacity) { }
 }

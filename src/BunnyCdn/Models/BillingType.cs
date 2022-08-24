@@ -1,10 +1,9 @@
-namespace BunnyCdn
+namespace BunnyCdn;
+
+public enum BillingType
 {
-    public enum BillingType
-    {
-        Bitcoin = 1,
-        CreditCard = 2,
-        MonthlyUsage = 3,
-        CouponCode = 5
-    }
+    Bitcoin = 1,
+    CreditCard = 2,
+    MonthlyUsage = 3,
+    CouponCode = 5
 }

@@ -1,7 +1,5 @@
 ﻿#nullable disable
 
-using System.Collections.Generic;
-
 namespace BunnyCdn;
 
 public sealed class GetStatisticsResult

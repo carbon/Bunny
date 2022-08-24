@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace BunnyCdn;
+﻿namespace BunnyCdn;
 
 public interface IBunnyCdnAccessKey
 {
