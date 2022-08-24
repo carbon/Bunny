@@ -47,6 +47,30 @@ public sealed class BunnyVideoClient
         return jsonResult!;
     }
 
+    public async Task<VideoUploadResult> UploadVideoAsync(long libraryId, Guid videoId, byte[] fileContent)
+    {
+        string url = baseUri + $"library/{libraryId}/videos/{videoId}";
+
+        var requestMessage = new HttpRequestMessage(HttpMethod.Put, url)
+        {
+            Content = new ByteArrayContent(fileContent)
+            {
+                Headers = { { "Content-Type", "application/json" } }
+            }
+        };
+
+        using var response = await SendMessageAsync(requestMessage).ConfigureAwait(false);
+
+        var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+
+        using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+        var jsonResult = await JsonSerializer.DeserializeAsync<VideoUploadResult>(responseStream).ConfigureAwait(false);
+
+        return jsonResult!;
+    }
+
     public async Task FetchVideoAsync(FetchVideoRequest request) 
     {
         string url = string.Create(CultureInfo.InvariantCulture, $"{baseUri}/library/{request.LibraryId}/videos/{request.VideoId}/fetch");
@@ -63,11 +87,25 @@ public sealed class BunnyVideoClient
         return await GetJsonAsync<Video>(url).ConfigureAwait(false);
     }
 
+    public Task<ListVideosResult> ListVideosAsync(long libraryId)
+    {
+        var url = baseUri + "library/" + libraryId + "/videos";
+
+        return GetJsonAsync<ListVideosResult>(url);
+    }
+
     public async Task CreateVideoCollectionAsync(CreateVideoCollection request)
     {
         string url = string.Create(CultureInfo.InvariantCulture, $"{baseUri}/library/{request.LibraryId}/collections");
 
         await PostJsonAsync(url, request).ConfigureAwait(false);
+    }
+
+    public async Task<Video> ReEncodeVideoAsync(long libraryId, Guid videoId)
+    {
+        string url = baseUri + $"library/{libraryId}/videos/{videoId}/reencode";
+
+        return await PostAsync<Video>(url);
     }
 
     public Task<ListVideoCollectionResult> ListCollectionsAsync(long libraryId)
@@ -104,6 +142,22 @@ public sealed class BunnyVideoClient
         var jsonResult = await JsonSerializer.DeserializeAsync<T>(responseStream).ConfigureAwait(false);
 
         return jsonResult!;
+    }
+
+    private async Task<T> PostAsync<T>(string url)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, url)
+        {
+
+        };
+
+        using var response = await SendMessageAsync(request).ConfigureAwait(false);
+
+        using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+        var jsonResult = await JsonSerializer.DeserializeAsync<T>(responseStream).ConfigureAwait(false);
+
+        return jsonResult;
     }
 
     private async Task PostJsonAsync<T>(string url, T data)

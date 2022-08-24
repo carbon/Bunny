@@ -257,6 +257,13 @@ public sealed partial class BunnyCdnClient
         return GetAsync<VideoLibrary>(new Uri(url));
     }
 
+    public Task<VideoLibrary> AddVideoLibraryAsync(String name)
+    {
+        var url = baseUrl + "videolibrary";
+
+        return PostJsonAsync<object, VideoLibrary>(new Uri(url), new { name });
+    }
+
     #endregion
     public async Task<IPAddress[]> GetEdgeIpsAsync()
     {
