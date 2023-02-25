@@ -2,7 +2,7 @@
 
 public sealed class EdgeRule
 {
-    public string? Guid { get; set; }
+    public Guid? Guid { get; set; }
 
     public string? ActionParameter1 { get; set; }
 
