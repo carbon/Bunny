@@ -15,7 +15,7 @@ public class EdgeRuleTests
                    Parameter1 = "abc",
                    PatternMatches = new[] { "1", "2", "3" },
                    PatternMatchingType = MatchType.Any,
-                   Type = EdgeRuleTriggerType.RequestUrl
+                   Type = EdgeRuleTriggerType.Url
                 }
             }
         };
