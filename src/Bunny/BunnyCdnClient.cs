@@ -9,8 +9,7 @@ using System.Text.Json.Serialization;
 using System.Web;
 
 using Bunny.Exceptions;
-
-using BunnyCdn.Serialization;
+using Bunny.Serialization;
 
 namespace Bunny.Cdn;
 
@@ -18,7 +17,7 @@ public sealed partial class BunnyCdnClient
 {
     private const string baseUrl = "https://api.bunny.net";
 
-    private readonly IBunnyCdnAccessKey _accessKey;
+    private readonly IBunnyAccessKey _accessKey;
     private readonly HttpClient _httpClient;
 
     private static readonly JsonSerializerOptions s_jso = new () {
@@ -26,10 +25,10 @@ public sealed partial class BunnyCdnClient
     };
 
     public BunnyCdnClient(string accessKey)
-        : this(new BunnyCdnAccessKey(accessKey))
+        : this(new BunnyAccessKey(accessKey))
     { }
 
-    public BunnyCdnClient(IBunnyCdnAccessKey accessKey)
+    public BunnyCdnClient(IBunnyAccessKey accessKey)
     {
         ArgumentNullException.ThrowIfNull(accessKey);
 
@@ -45,7 +44,7 @@ public sealed partial class BunnyCdnClient
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "gzip");
     }
 
-    public BunnyCdnClient(IBunnyCdnAccessKey accessKey, HttpClient httpClient)
+    public BunnyCdnClient(IBunnyAccessKey accessKey, HttpClient httpClient)
     {
         ArgumentNullException.ThrowIfNull(httpClient);
 

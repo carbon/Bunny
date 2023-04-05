@@ -1,6 +1,6 @@
 ﻿namespace Bunny.Cdn;
 
-public interface IBunnyCdnAccessKey
+public interface IBunnyAccessKey
 {
     bool ShouldRenew { get; }
 

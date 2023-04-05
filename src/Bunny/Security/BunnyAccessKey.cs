@@ -1,8 +1,8 @@
 ﻿namespace Bunny.Cdn;
 
-public sealed class BunnyCdnAccessKey : IBunnyCdnAccessKey
+public sealed class BunnyAccessKey : IBunnyAccessKey
 {
-    public BunnyCdnAccessKey(string value)
+    public BunnyAccessKey(string value)
     {
         ArgumentNullException.ThrowIfNull(value);
 
