@@ -2,9 +2,9 @@
 
 using System.Text.Json.Serialization;
 
-namespace Bunny.Cdn;
+namespace Bunny.Streaming;
 
-public sealed class ListVideosResult
+public sealed class ListVideoCollectionResult
 {
     [JsonPropertyName("totalItems")]
     public long TotalItems { get; init; }
@@ -16,5 +16,5 @@ public sealed class ListVideosResult
     public long ItemsPerPage { get; init; }
 
     [JsonPropertyName("items")]
-    public Video[] Items { get; init; }
+    public VideoCollection[] Items { get; init; }
 }

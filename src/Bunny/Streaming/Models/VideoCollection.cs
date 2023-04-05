@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-namespace Bunny.Cdn;
+namespace Bunny.Streaming;
 
 public sealed class VideoCollection
 {

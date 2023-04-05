@@ -2,7 +2,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace Bunny.Cdn;
+namespace Bunny.Streaming;
 
 public sealed class UploadVideoResult
 {
