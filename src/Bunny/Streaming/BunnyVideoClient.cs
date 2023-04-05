@@ -7,7 +7,7 @@ using System.Text.Json;
 
 using Bunny.Exceptions;
 
-namespace Bunny.Cdn;
+namespace Bunny.Streaming;
 
 public sealed class BunnyVideoClient
 {

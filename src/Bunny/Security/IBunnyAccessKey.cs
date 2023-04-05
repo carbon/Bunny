@@ -1,4 +1,4 @@
-﻿namespace Bunny.Cdn;
+﻿namespace Bunny;
 
 public interface IBunnyAccessKey
 {

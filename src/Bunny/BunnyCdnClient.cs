@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Web;
-
+using Bunny.Dns;
 using Bunny.Exceptions;
 using Bunny.Serialization;
 
@@ -301,7 +301,7 @@ public sealed partial class BunnyCdnClient
 
         using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
 
-        var json = await response.Content.ReadFromJsonAsync<string[]>(s_jso).ConfigureAwait(false);
+        var json = await response.Content.ReadFromJsonAsync<string[]>(JsonSerializerOptions.Default).ConfigureAwait(false);
 
         var servers = new IPAddress[json!.Length];
 
@@ -335,7 +335,7 @@ public sealed partial class BunnyCdnClient
 
         using HttpResponseMessage response = await SendMessageAsync(message).ConfigureAwait(false);
 
-        var result = await response.Content.ReadFromJsonAsync<TResult>(s_jso).ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync<TResult>(JsonSerializerOptions.Default).ConfigureAwait(false);
 
         return result;
     }
@@ -427,7 +427,7 @@ public sealed partial class BunnyCdnClient
             throw new Exception(responseText);
         }
 
-        var result = await response.Content.ReadFromJsonAsync<T>(s_jso).ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync<T>(JsonSerializerOptions.Default).ConfigureAwait(false);
 
         return result!;
     }
