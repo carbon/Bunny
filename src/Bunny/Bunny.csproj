@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Bunny</AssemblyName>
+    <TargetFramework>net7.0</TargetFramework>
+    <Version>0.20.0</Version>
+    <Nullable>enable</Nullable>
+
+    <Authors>iamcarbon</Authors>
+    <Description>A modern API for Bunny.net.</Description>
+    <PackageId>Bunny</PackageId>
+    <PackageTags>bunny.net dns CDN</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/carbon/BunnyCdn</PackageProjectUrl>
+  </PropertyGroup>
+</Project>
