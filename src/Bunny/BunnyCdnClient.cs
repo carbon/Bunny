@@ -3,54 +3,22 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Net.Mime;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Web;
-using Bunny.Dns;
-using Bunny.Exceptions;
+
 using Bunny.Serialization;
 
 namespace Bunny.Cdn;
 
-public sealed partial class BunnyCdnClient
+public sealed class BunnyCdnClient : BunnyApiClient
 {
-    private const string baseUrl = "https://api.bunny.net";
-
-    private readonly IBunnyAccessKey _accessKey;
-    private readonly HttpClient _httpClient;
-
-    private static readonly JsonSerializerOptions s_jso = new () {
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-    };
-
     public BunnyCdnClient(string accessKey)
-        : this(new BunnyAccessKey(accessKey))
+        : base(new BunnyAccessKey(accessKey))
     { }
 
-    public BunnyCdnClient(IBunnyAccessKey accessKey)
-    {
-        ArgumentNullException.ThrowIfNull(accessKey);
-
-        _accessKey = accessKey;
-
-        _httpClient = new HttpClient(new SocketsHttpHandler {
-            AutomaticDecompression = DecompressionMethods.All,
-            ConnectTimeout = TimeSpan.FromSeconds(10)
-        }) { 
-            Timeout = TimeSpan.FromMinutes(15) 
-        };
-
-        _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "gzip");
-    }
-
     public BunnyCdnClient(IBunnyAccessKey accessKey, HttpClient httpClient)
-    {
-        ArgumentNullException.ThrowIfNull(httpClient);
-
-        _accessKey = accessKey;
-        _httpClient = httpClient;
-    }
+        : base(accessKey, httpClient)
+    { }
 
     #region Pull Zones
 
@@ -266,31 +234,6 @@ public sealed partial class BunnyCdnClient
 
     #endregion
 
-    #region DNS
-
-    public Task<ListDnsZonesResult> ListDnsZonesAsync()
-    {
-        var url = new Uri($"{baseUrl}/dnszone");
-
-        return GetAsync<ListDnsZonesResult>(url);
-    }
-
-    public async Task DeleteDnsRecord(long zoneId, long recordId)
-    {
-        var url = new Uri($"{baseUrl}/dnszone/{zoneId}/records/{recordId}");
-
-        await DeleteAsync(url);
-    }
-
-    public async Task DeleteDnsZone(long zoneId)
-    {
-        var url = new Uri(string.Create(CultureInfo.InvariantCulture, $"{baseUrl}/dnszone/{zoneId}"));
-
-        await DeleteAsync(url);
-    }
-
-    #endregion
-
     public async Task<IPAddress[]> GetEdgeIpsAsync()
     {
         const string url = "https://api.bunny.net/system/edgeserverlist";
@@ -311,124 +254,5 @@ public sealed partial class BunnyCdnClient
         }
 
         return servers;
-    }
-
-    private static Uri GetUrl(string path) => new (baseUrl + path);
-
-    private async Task GetAsync(Uri url)
-    {
-        using var response = await SendMessageAsync(new HttpRequestMessage(HttpMethod.Get, url)).ConfigureAwait(false);
-    }
-   
-    private async Task<TResult> PostJsonAsync<TRequest, TResult>(Uri url, TRequest data)   
-    {
-        byte[] json = JsonSerializer.SerializeToUtf8Bytes(data, s_jso);
-
-        var message = new HttpRequestMessage(HttpMethod.Post, url) {
-            Headers = {
-                { "Accept", MediaTypeNames.Application.Json },
-            },
-            Content = new ByteArrayContent(json) {
-                Headers = { { "Content-Type", MediaTypeNames.Application.Json } }
-            }
-        };
-
-        using HttpResponseMessage response = await SendMessageAsync(message).ConfigureAwait(false);
-
-        var result = await response.Content.ReadFromJsonAsync<TResult>(JsonSerializerOptions.Default).ConfigureAwait(false);
-
-        return result;
-    }
-
-    private async Task PostJsonAsync<TRequest>(Uri url, TRequest data)
-    {
-        byte[] json = JsonSerializer.SerializeToUtf8Bytes(data, s_jso);
-
-        var message = new HttpRequestMessage(HttpMethod.Post, url) {
-            Headers = {
-                { "Accept", MediaTypeNames.Application.Json },
-            },
-            Content = new ByteArrayContent(json) {
-                Headers = { 
-                    { "Content-Type", MediaTypeNames.Application.Json }
-                }
-            }
-        };
-
-        using HttpResponseMessage response = await SendMessageAsync(message).ConfigureAwait(false);     
-    }
-
-    private async Task DeleteAsync(Uri url)
-    {
-        var request = new HttpRequestMessage(HttpMethod.Delete, url);
-
-        using var response = await SendMessageAsync(request).ConfigureAwait(false);
-    }
-
-    private async Task PostAsync(Uri url)
-    {
-        using var response = await SendMessageAsync(new HttpRequestMessage(HttpMethod.Post, url)).ConfigureAwait(false);
-    }
-
-    private async Task<HttpResponseMessage> SendMessageAsync(HttpRequestMessage request)
-    {
-        if (_accessKey.ShouldRenew)
-        {
-            await _accessKey.RenewAsync().ConfigureAwait(false);
-        }
-
-        request.Headers.Add("AccessKey", _accessKey.Value);
-
-        HttpResponseMessage response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            byte[] responseBytes = response.Content is not null
-                ? await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false)
-                : Array.Empty<byte>();
-
-            response.Dispose();
-
-            if (responseBytes is [ (byte)'{', .. ])
-            {
-                var error = JsonSerializer.Deserialize<BunnyError>(responseBytes);
-
-                if (error?.Message is not null)
-                {
-                    throw new BunnyException(response.StatusCode, error!);
-                }
-            }
-
-            if (response.StatusCode is HttpStatusCode.Unauthorized)
-            {
-                throw new BunnyException(response.StatusCode, "Unauthorized");
-            }
-
-            string responseText = responseBytes.Length > 0
-                ? Encoding.UTF8.GetString(responseBytes)
-                : response.StatusCode.ToString();
-
-            throw new BunnyException(response.StatusCode, responseText);
-        }
-           
-        return response;
-    }
-
-    private async Task<T> GetAsync<T>(Uri url)
-    {
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-
-        using var response = await SendMessageAsync(request).ConfigureAwait(false);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-            throw new Exception(responseText);
-        }
-
-        var result = await response.Content.ReadFromJsonAsync<T>(JsonSerializerOptions.Default).ConfigureAwait(false);
-
-        return result!;
     }
 }
