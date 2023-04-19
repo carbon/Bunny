@@ -16,6 +16,10 @@ public sealed class BunnyCdnClient : BunnyApiClient
         : base(new BunnyAccessKey(accessKey))
     { }
 
+    public BunnyCdnClient(IBunnyAccessKey accessKey)
+        : base(accessKey)
+    { }
+
     public BunnyCdnClient(IBunnyAccessKey accessKey, HttpClient httpClient)
         : base(accessKey, httpClient)
     { }
