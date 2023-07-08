@@ -9,8 +9,8 @@
     <Authors>iamcarbon</Authors>
     <Description>A modern API for Bunny.net.</Description>
     <PackageId>Bunny</PackageId>
-    <PackageTags>bunny.net dns CDN</PackageTags>
+    <PackageTags>bunny.net DNS CDN</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/carbon/BunnyCdn</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/carbon/Bunny</PackageProjectUrl>
   </PropertyGroup>
 </Project>
