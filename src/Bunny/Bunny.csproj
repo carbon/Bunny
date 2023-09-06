@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <AssemblyName>Bunny</AssemblyName>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Version>0.2.0</Version>
     <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
 
     <Authors>iamcarbon</Authors>
     <Description>A modern API for Bunny.net.</Description>
