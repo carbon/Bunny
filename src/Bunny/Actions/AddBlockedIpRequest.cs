@@ -2,17 +2,9 @@
 
 namespace Bunny.Cdn;
 
-public sealed class AddBlockedIpRequest
+public sealed class AddBlockedIpRequest(long pullZoneId, IPAddress blockedIp)
 {
-    public AddBlockedIpRequest(long pullZoneId, IPAddress blockedIp)
-    {
-        ArgumentNullException.ThrowIfNull(blockedIp);
+    public long PullZoneId { get; } = pullZoneId;
 
-        PullZoneId = pullZoneId;
-        BlockedIp = blockedIp;
-    }
-
-    public long PullZoneId { get; }
-
-    public IPAddress BlockedIp { get; }
+    public IPAddress BlockedIp { get; } = blockedIp ?? throw new ArgumentNullException(nameof(blockedIp));
 }

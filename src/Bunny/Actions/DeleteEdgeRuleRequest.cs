@@ -1,14 +1,8 @@
 ﻿namespace Bunny.Cdn;
 
-public sealed class DeleteEdgeRuleRequest
+public sealed class DeleteEdgeRuleRequest(long pullZoneId, Guid edgeRuleId)
 {
-    public DeleteEdgeRuleRequest(long pullZoneId, Guid edgeRuleId)
-    {
-        PullZoneId = pullZoneId;
-        EdgeRuleId = edgeRuleId;
-    }
+    public long PullZoneId { get; } = pullZoneId;
 
-    public long PullZoneId { get; }
-
-    public Guid EdgeRuleId { get; }
+    public Guid EdgeRuleId { get; } = edgeRuleId;
 }

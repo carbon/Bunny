@@ -2,23 +2,14 @@
 
 namespace Bunny.Streaming;
 
-public sealed class FetchVideoRequest
+public sealed class FetchVideoRequest(long libraryId, Guid videoId, string url)
 {
-    public FetchVideoRequest(long libraryId, Guid videoId, string url)
-    {
-        ArgumentNullException.ThrowIfNull(url);
-
-        LibraryId = libraryId;
-        VideoId = videoId;
-        Url = url;
-    }
+    [JsonIgnore]
+    public long LibraryId { get; } = libraryId;
 
     [JsonIgnore]
-    public long LibraryId { get; }
-
-    [JsonIgnore]
-    public Guid VideoId { get; }
+    public Guid VideoId { get; } = videoId;
 
     [JsonPropertyName("url")]
-    public string Url { get; }
+    public string Url { get; } = url ?? throw new ArgumentNullException(nameof(url));
 }

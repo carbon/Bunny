@@ -2,18 +2,12 @@
 
 namespace Bunny.Streaming;
 
-public readonly struct MetaDataItem
+[method: JsonConstructor]
+public readonly struct MetaDataItem(string property, string value)
 {
-    [JsonConstructor]
-    public MetaDataItem(string property, string value)
-    {
-        Property = property;
-        Value = value;
-    }
-
     [JsonPropertyName("property")]
-    public string Property { get; }
+    public string Property { get; } = property;
 
     [JsonPropertyName("value")]
-    public string Value { get; }
+    public string Value { get; } = value;
 }

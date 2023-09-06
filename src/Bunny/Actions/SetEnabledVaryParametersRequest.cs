@@ -1,28 +1,19 @@
 ﻿namespace Bunny.Cdn;
 
-public sealed class SetEnabledVaryParametersRequest
+public sealed class SetEnabledVaryParametersRequest(
+    long pullZoneId,
+    bool queryStringVaryEnabled,
+    bool requestHostnameVaryEnabled,
+    bool userCountryCodeVaryEnabled,
+    bool webpVaryEnabled)
 {
-    public SetEnabledVaryParametersRequest(
-        long pullZoneId,
-        bool queryStringVaryEnabled,
-        bool requestHostnameVaryEnabled,
-        bool userCountryCodeVaryEnabled,
-        bool webpVaryEnabled)
-    {
-        PullZoneId = pullZoneId;
-        QueryStringVaryEnabled = queryStringVaryEnabled;
-        RequestHostnameVaryEnabled = requestHostnameVaryEnabled;
-        UserCountryCodeVaryEnabled = userCountryCodeVaryEnabled;
-        WebpVaryEnabled = webpVaryEnabled;
-    }
+    public long PullZoneId { get; } = pullZoneId;
 
-    public long PullZoneId { get; }
+    public bool QueryStringVaryEnabled { get; } = queryStringVaryEnabled;
 
-    public bool QueryStringVaryEnabled { get; }
+    public bool RequestHostnameVaryEnabled { get; } = requestHostnameVaryEnabled;
 
-    public bool RequestHostnameVaryEnabled { get; }
+    public bool UserCountryCodeVaryEnabled { get; } = userCountryCodeVaryEnabled;
 
-    public bool UserCountryCodeVaryEnabled { get; }
-
-    public bool WebpVaryEnabled { get; }
+    public bool WebpVaryEnabled { get; } = webpVaryEnabled;
 }

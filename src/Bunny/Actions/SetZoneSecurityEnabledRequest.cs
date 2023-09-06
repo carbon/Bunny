@@ -1,14 +1,8 @@
 ﻿namespace Bunny.Cdn;
 
-public sealed class SetZoneSecurityEnabledRequest
+public sealed class SetZoneSecurityEnabledRequest(long pullZoneId, bool value)
 {
-    public SetZoneSecurityEnabledRequest(long pullZoneId, bool value)
-    {
-        Id = pullZoneId;
-        Value = value;
-    }
+    public long Id { get; } = pullZoneId;
 
-    public long Id { get; }
-
-    public bool Value { get; }
+    public bool Value { get; } = value;
 }

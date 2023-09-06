@@ -2,15 +2,9 @@
 
 namespace Bunny.Cdn;
 
-public sealed class RemoveBlockedIpRequest
+public sealed class RemoveBlockedIpRequest(long pullZoneId, IPAddress blockedIp)
 {
-    public RemoveBlockedIpRequest(long pullZoneId, IPAddress blockedIp)
-    {
-        PullZoneId = pullZoneId;
-        BlockedIp = blockedIp;
+    public long PullZoneId { get; } = pullZoneId;
 
-    }
-    public long PullZoneId { get; }
-
-    public IPAddress BlockedIp { get; }
+    public IPAddress BlockedIp { get; } = blockedIp;
 }

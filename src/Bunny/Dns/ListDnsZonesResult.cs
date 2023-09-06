@@ -2,13 +2,8 @@
 
 namespace Bunny.Dns;
 
-public sealed class ListDnsZonesResult
+[method: JsonConstructor]
+public sealed class ListDnsZonesResult(DnsZone[] items)
 {
-    [JsonConstructor]
-    public ListDnsZonesResult(DnsZone[] items)
-    {
-        Items = items;
-    }
-
-    public DnsZone[] Items { get; }
+    public DnsZone[] Items { get; } = items;
 }
