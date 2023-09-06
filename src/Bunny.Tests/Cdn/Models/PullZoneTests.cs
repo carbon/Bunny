@@ -11,7 +11,7 @@ public class PullZoneTests
             Id = 11,
             Type = 0,
             AddHostHeader = true,
-            BlockedCountries = new[] { "AU" }
+            BlockedCountries = [ "AU" ]
         };
 
         Assert.Equal("""
@@ -120,10 +120,10 @@ public class PullZoneTests
         {
             Id = 11,
             Type = 0,
-            BlockedIps = new[] {
+            BlockedIps = [
                 "1.1.1.1"
-            },
-            AccessControlOriginHeaderExtensions = new[] { "eot" },
+            ],
+            AccessControlOriginHeaderExtensions = [ "eot" ],
             EnableAccessControlOriginHeader = true,
             EnableWebPVary = true,
             EnableAvifVary = true,

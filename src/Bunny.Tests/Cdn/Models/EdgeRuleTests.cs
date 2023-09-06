@@ -11,14 +11,14 @@ public class EdgeRuleTests
         {
             ActionType = EdgeRuleActionType.BlockRequest,
             Description = "RULE NAME",
-            Triggers = new[] {
+            Triggers = [
                 new EdgeRuleTrigger {
                    Parameter1 = "abc",
-                   PatternMatches = new[] { "1", "2", "3" },
+                   PatternMatches = ["1", "2", "3"],
                    PatternMatchingType = MatchType.Any,
                    Type = EdgeRuleTriggerType.Url
                 }
-            }
+            ]
         };
 
         Assert.Equal(
