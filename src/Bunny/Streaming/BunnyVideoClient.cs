@@ -13,8 +13,6 @@ public sealed class BunnyVideoClient
 {
     private const string baseUri = "https://video.bunnycdn.com";
 
-    private static readonly JsonSerializerOptions s_jso = new();
-
     private readonly HttpClient _httpClient = new () {
         Timeout = TimeSpan.FromMinutes(10) 
     };
@@ -119,7 +117,7 @@ public sealed class BunnyVideoClient
 
         using var response = await SendMessageAsync(request).ConfigureAwait(false);
 
-        var result = await response.Content.ReadFromJsonAsync<T>(s_jso).ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync<T>(JsonSerializerOptions.Default).ConfigureAwait(false);
 
         return result!;
     }
@@ -130,7 +128,7 @@ public sealed class BunnyVideoClient
 
         using var response = await SendMessageAsync(request).ConfigureAwait(false);
 
-        var result = await response.Content.ReadFromJsonAsync<T>(s_jso).ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync<T>(JsonSerializerOptions.Default).ConfigureAwait(false);
 
         return result!;
     }
@@ -152,7 +150,7 @@ public sealed class BunnyVideoClient
             throw new Exception(responseText);
         }
 
-        var result = await response.Content.ReadFromJsonAsync<TResult>(s_jso).ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync<TResult>(JsonSerializerOptions.Default).ConfigureAwait(false);
 
         return result!;
     }
