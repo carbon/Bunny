@@ -2,17 +2,11 @@
 
 namespace Bunny.Streaming;
 
-public sealed class CreateVideoCollection
+public sealed class CreateVideoCollection(long libraryId, string name)
 {
-    public CreateVideoCollection(long libraryId, string name)
-    {
-        LibraryId = libraryId;
-        Name = name;
-    }
-
     [JsonIgnore]
-    public long LibraryId { get; }
+    public long LibraryId { get; } = libraryId;
 
     [JsonPropertyName("name")]
-    public string Name { get; }
+    public string Name { get; } = name;
 }
