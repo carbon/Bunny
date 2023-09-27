@@ -1,7 +1,6 @@
 using System.Text.Json;
-using Bunny.Cdn;
 
-namespace Bunny.Tests.Cdn.Results;
+namespace Bunny.Cdn.Tests;
 
 public class GetStatisticsResultTests
 {

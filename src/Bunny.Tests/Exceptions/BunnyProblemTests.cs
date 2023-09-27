@@ -18,7 +18,7 @@ public class BunnyProblemTests
                     "Title":["The Title field is required."]
                 }
             }
-            """);
+            """u8);
 
         Assert.Equal("https://tools.ietf.org/html/rfc7231#section-6.5.1", result.Type);
         Assert.Equal("One or more validation errors occurred.", result.Title);
