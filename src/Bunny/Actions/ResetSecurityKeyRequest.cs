@@ -1,11 +1,6 @@
 ﻿namespace Bunny.Cdn;
 
-public sealed class ResetSecurityKeyRequest
+public sealed class ResetSecurityKeyRequest(long pullZoneId)
 {
-    public ResetSecurityKeyRequest(long pullZoneId)
-    {
-        Id = pullZoneId;
-    }
-
-    public long Id { get; }
+    public long Id { get; } = pullZoneId;
 }

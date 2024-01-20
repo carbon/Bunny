@@ -1,6 +1,9 @@
 ﻿namespace Bunny.Cdn;
 
-public sealed class SetTlsSupportRequest(long pullZoneId, bool enableTls1, bool enableTls1_1)
+public sealed class SetTlsSupportRequest(
+    long pullZoneId,
+    bool enableTls1,
+    bool enableTls1_1)
 {
     public long PullZoneId { get; } = pullZoneId;
 

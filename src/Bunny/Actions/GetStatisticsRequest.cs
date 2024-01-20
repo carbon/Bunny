@@ -1,26 +1,18 @@
 ﻿namespace Bunny.Cdn;
 
-public sealed class GetStatisticsRequest
+public sealed class GetStatisticsRequest(
+    long? pullZoneId = null,
+    long? serverZoneId = null,
+    DateTime? start = null,
+    DateTime? end = null)
 {
-    public GetStatisticsRequest(
-        long? pullZoneId = null,
-        long? serverZoneId = null,
-        DateTime? start = null,
-        DateTime? end = null)
-    {
-        PullZoneId = pullZoneId;
-        ServerZoneId = serverZoneId;
-        Start = start;
-        End = end;
-    }
+    public long? PullZoneId { get; } = pullZoneId;
 
-    public long? PullZoneId { get; }
-
-    public long? ServerZoneId { get; }
+    public long? ServerZoneId { get; } = serverZoneId;
 
     // dateFrom
-    public DateTime? Start { get; }
+    public DateTime? Start { get; } = start;
 
     // dateTo
-    public DateTime? End { get; }
+    public DateTime? End { get; } = end;
 }
