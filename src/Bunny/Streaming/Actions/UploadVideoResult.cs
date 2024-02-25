@@ -7,11 +7,11 @@ namespace Bunny.Streaming;
 public sealed class UploadVideoResult
 {
     [JsonPropertyName("success")]
-    public bool Success { get; set; }
+    public bool Success { get; init; }
 
     [JsonPropertyName("message")]
-    public string Message { get; set; }
+    public string Message { get; init; }
 
     [JsonPropertyName("statusCode")]
-    public int StatusCode { get; set; }
+    public int StatusCode { get; init; }
 }

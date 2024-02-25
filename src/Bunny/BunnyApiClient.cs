@@ -118,7 +118,7 @@ public abstract class BunnyApiClient
         {
             byte[] responseBytes = response.Content is not null
                 ? await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false)
-                : Array.Empty<byte>();
+                : [];
 
             response.Dispose();
 
