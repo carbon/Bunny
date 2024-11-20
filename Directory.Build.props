@@ -1,5 +1,7 @@
 <Project>
   <PropertyGroup>
+    <LangVersion>13</LangVersion>
     <UseArtifactsOutput>true</UseArtifactsOutput>
+    <NoWarn>IDE0130</NoWarn>
   </PropertyGroup>
 </Project>
