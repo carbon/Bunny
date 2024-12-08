@@ -38,9 +38,11 @@ public sealed class CreatePullZoneRequest
 
     public string[]? BlockedReferrers { get; set; }
 
-    public bool? EnableWebpVary { get; set; }
+    public bool? EnableQueryStringOrdering { get; set; }
 
     public bool? EnableAvifVary { get; set; }
+
+    public bool? EnableWebpVary { get; set; }
 
     public bool? EnableCacheSlice { get; set; }
 
@@ -49,6 +51,8 @@ public sealed class CreatePullZoneRequest
     public bool? DisableCookies { get; set; }
 
     public string[]? BlockedCountries { get; set; }
+
+    public bool? AddCanonicalHeader { get; set; }
 
     public bool? AddHostHeader { get; set; }
 
@@ -63,6 +67,10 @@ public sealed class CreatePullZoneRequest
     public bool? LogForwardingEnabled { get; set; }
 
     public string? LogForwardingHostname { get; set; }
+
+    public int? LogForwardingPort { get; set; }
+
+    public string? LogForwardingToken { get; set; }
 
     public LogForwardingProtocol? LogForwardingProtocol { get; set; }
 
