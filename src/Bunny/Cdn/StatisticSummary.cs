@@ -4,11 +4,13 @@ namespace Bunny.Cdn;
 
 public sealed class GetStatisticsResult
 {
-    public double TotalBandwidthUsed { get; init; }
+    public required long TotalBandwidthUsed { get; init; }
 
-    public long TotalRequestsServed { get; init; }
+    public required long TotalRequestsServed { get; init; }
 
-    public double CacheHitRate { get; init; }
+    public required int AverageOriginResponseTime { get; init; }
+
+    public required double CacheHitRate { get; init; }
 
     public Dictionary<string, long> BandwidthUsedChart { get; init; }
 

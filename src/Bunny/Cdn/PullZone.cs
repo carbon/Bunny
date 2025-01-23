@@ -87,6 +87,8 @@ public sealed class PullZone
 
     public bool? IgnoreVaryHeader { get; set; }
 
+    public bool? EnableQueryStringOrdering { get; set; }
+
     // Enables Range Requests
     public bool? EnableCacheSlice { get; set; }
 
