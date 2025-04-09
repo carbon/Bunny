@@ -60,7 +60,7 @@ public class VideoLibraryTests
         Assert.Equal("test1", l0.Name);
         Assert.Equal(0, l0.VideoCount);
         Assert.Equal(2021, l0.DateCreated.Year);
-        Assert.Equal([ "NY", "LA", "SG" ], l0.ReplicationRegions);
+        Assert.Equal(["NY", "LA", "SG"], l0.ReplicationRegions.AsSpan());
         Assert.Equal("240p,360p,480p,720p,1080p,1440p,2160p", l0.EnabledResolutions);
         Assert.True(l0.BlockNoneReferrer);
         Assert.Equal("x", l0.ReadOnlyApiKey);

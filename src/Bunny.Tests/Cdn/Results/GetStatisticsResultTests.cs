@@ -25,6 +25,7 @@ public class GetStatisticsResultTests
     {
         TotalBandwidthUsed = 21,
         TotalRequestsServed = 20000,
+        AverageOriginResponseTime = 14,
         CacheHitRate = 98.41,
         BandwidthUsedChart = new() {
             { GetDateString(DateTime.UtcNow.AddDays(-5)), 1 },
