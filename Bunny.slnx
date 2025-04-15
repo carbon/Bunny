@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Project Path="src/Bunny.Tests/Bunny.Tests.csproj" />
+  <Project Path="src/Bunny/Bunny.csproj" />
+</Solution>
